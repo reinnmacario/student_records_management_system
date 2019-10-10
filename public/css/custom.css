@@ -1,0 +1,9 @@
+.hidden{
+	display: none;
+}
+
+@font-face {
+    src: url('../../assets/fonts/PinyonScript-Regular.ttf');
+     font-family: "pinyon";
+     font-style: normal;
+}
