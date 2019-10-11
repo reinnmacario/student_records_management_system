@@ -18,9 +18,7 @@ Route::get('/', function () {
 });
 
 // Updated Custom Dashboard Routes
-Route::get('/dashboard', function () {
-    return view('dashboard.dashboard');
-});
+Route::get('/dashboard', 'UserController@showDashboard');
 
 Route::get('/change-password', function () {
     return view('dashboard.changepassword');
@@ -39,11 +37,17 @@ Route::get('/account-management', function () {
 });
 //  End
 
-Route::get('asa/haha', 'EventController@tangina');
 
+ Route::get('/users/get-all-roles', 'UserController@getAllRoles');
+ Route::get('/users/get-all-users', 'UserController@getAllUsers');
 
 // Generate password manually for testing
 Route::get('password', 'Auth\RegisterController@generatePassword');
+
+
+Route::get('user/get-new-password', 'UserController@generateNewPassword');
+Route::delete('user/delete/{id}', 'UserController@destroy');
+
 
 Route::get('logout', 'Auth\LoginController@logout');
 Route::middleware('auth:api')->get('/user', function (Request $request) {
@@ -56,16 +60,18 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('register', 'UserController@register');
 Route::post('login', 'UserController@authenticate');
 Route::post('logout', 'UserController@authenticate');
-// Route::group(['middleware' => ['jwt.verify']], function () {
+Route::group(['middleware' => ['jwt.verify']], function () {
 
+    Route::get('events/show/{$id}', 'EventController@show');
     Route::resource('speakers', 'SpeakerController')->middleware('org.user');
     Route::post('speakers/{speaker_id}/events/{event_id}', "SpeakerController@assignToEvent");
     Route::delete('speakers/{speaker_id}/events/{event_id}', "SpeakerController@removeFromEvent");
 
     Route::prefix('users')->group(function(){
+        
         Route::get('', 'UserController@index');
         Route::get('{id}', 'UserController@show');
-        Route::delete('{id}', 'UserController@destroy')->middleware('osa.user');
+        // Route::delete('delete/{id}', 'UserController@destroy');
     });
 
     Route::prefix('students')->group(function() {
@@ -100,7 +106,7 @@ Route::post('logout', 'UserController@authenticate');
     Route::get('user', 'UserController@getAuthenticatedUser');
     Route::get('closed', 'DataController@closed');
     Route::get('test', 'DataController@test');
-// });
+});
 
 
 /**

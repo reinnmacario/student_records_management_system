@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="{{ asset('css/bootstrap-extend.min.css') }}">
     <!-- Custom fonts for this template-->
     <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
     @yield('styles')
 
     <!-- Custom styles for this template-->
@@ -62,7 +63,7 @@
 
 </html>
     <!-- Bootstrap core JavaScript-->
-    <script src="{{ asset('js/jquery.min.js') }}"></script>
+    
     <script src="{{ asset('js/popper.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
     <!-- Core plugin JavaScript-->

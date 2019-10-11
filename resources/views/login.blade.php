@@ -40,7 +40,6 @@
       <div class="card card-login mx-auto mt-5">
         <div class="card-body">
           <form id="form-login" method="post" action="/login">
-            @csrf
             <div class="text-center">
                <div class="form-title"><h3>Student Record Management System</h3></div>
             </div>
@@ -56,6 +55,7 @@
                 <label for="password">Password</label>
               </div>
             </div>
+            <input type="hidden" id="token" name="_token" value="{{csrf_token()}}">
             <div class="form-group">
               <div class="checkbox">
                 <label>
@@ -85,9 +85,13 @@
         $(document).on('submit', '#form-login', function() {
 
           $.ajax({
-            url: "/login",
+            url: "login",
             type: "POST",
+            beforeSend: function(request) {
+              request.setRequestHeader("Authority", $('#token').val());
+            },
             data: $(this).serialize(),
+            processData: false,
             success: function(data) {
               if (data.token !== undefined) {
                 window.location.href = "/dashboard";
@@ -99,7 +103,7 @@
                 console.log(data);
                     var errors = $.parseJSON(data.responseText);
                     $.each(errors, function (key, val) {
-                      alert(val.replace(/_/g," "));
+                      alert(val);
                     });
                 }
             }

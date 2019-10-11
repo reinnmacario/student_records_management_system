@@ -35,26 +35,26 @@
                 <table class="table table-bordered dt-responsive" id="table-accounts" width="100%" cellspacing="0">
                   <thead>
                     <tr>
-                      <th>eReserve No.</th>
-                      <th>Event Name</th>
-                      <th>Organization</th>
-                      <th>College</th>
-                      <th>Academic Year</th>
-                      <th>Semester</th>
-                      <th>Date Submitted</th>
-                      <th>Status</th>
+                      <th class="hidden">ID</th>
+                      <th>First Name</th>
+                      <th>Last Name</th>
+                      <th>Email</th>
+                      <th>Student No.</th>
+                      <th>Role</th>
+                      <th>Date Created</th>
+                      <th>Actions</th>
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
-                      <th>eReserve No.</th>
-                      <th>Event Name</th>
-                      <th>Organization</th>
-                      <th>College</th>
-                      <th>Academic Year</th>
-                      <th>Semester</th>
-                      <th>Date Submitted</th>
-                      <th>Status</th>
+                      <th class="hidden">ID</th>
+                      <th>First Name</th>
+                      <th>Last Name</th>
+                      <th>Email</th>
+                      <th>Student No.</th>
+                      <th>Role</th>
+                      <th>Date Created</th>
+                      <th>Actions</th>
                     </tr>
                   </tfoot>
                   <tbody>
@@ -84,7 +84,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Add New Project</h5>
+            <h5 class="modal-title" id="exampleModalLongTitle">Add New Account</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -93,53 +93,45 @@
             <div class="tab-content" id="nav-tabContent">
               <div class="tab-pane fade show active" id="nav-add" role="tabpanel" aria-labelledby="nav-home-tab">
 
-                <form action="" method="POST">
+                <form id="form-add-account">
                   <div class="container my-2">
                     <div class="row">
                       <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Role</label>
+                            <select type="select" id="select-role" class="form-control" name="role_id" required>
+                            </select>
+                        </div>
+                        <div class="form-group student-number-container hidden">
+                          <label>Student Number</label>
+                            <input type="text" class="form-control" id="student_number" name="student_number" required>
+                        </div>
+                        <div class="organization-container hidden">
+
+
+                        </div>
                         <div class="form-row">
                           <div class="col-md-6">
-                            <label>eReserve No.</label>
-                            <input type="text" class="form-control" name="ereserve_id" required>
+                            <label>First name</label>
+                            <input type="text" class="form-control" name="first_name" required>
                           </div>
-                        </div>
-                        <div class="form-row">
+                          <input type="hidden" id="token" name="_token" value="{{csrf_token()}}">
                           <div class="col-md-6">
-                            <label>Event name</label>
-                            <input type="text" class="form-control" name="name">
-                          </div>
-                          <div class="col-md-6">
-                            <label>Start of Event Date</label>
-                            <input type="date" class="form-control" id="date_start" name="date_start" required>
+                            <label>Last Name</label>
+                            <input type="text" class="form-control" name="last_name" required>
                           </div>
                         </div>
                         <div class="form-group">
-                          <div class="form-row">
-                            <div class="col-md-6">
-                              <label>Academic Year</label>
-                              <input type="text" class="form-control" id="username" name="username">
-                            </div>
-                            <div class="col-md-6">
-                              <label>Semester</label>
-                              <input type="text" class="form-control" id="semester" name="semester">
-                            </div>
-                          </div>
+                              <label>Email</label>
+                              <input type="email" class="form-control" id="email" name="email">
                         </div>
                         <div class="form-group">
-                          <label>Event Description</label>
-                          <textarea class="form-control" name="Description"></textarea>
-                        </div>
-                        <div class="form-group">
-                          <label>Speaker Name</label>
-                          <input type="text" class="form-control" id="speaker_name" name="speaker_name">
-                        </div>
-                        <div class="form-group">
-                          <label>Speaker Affiliation</label>
-                          <textarea class="form-control" name="speaker_affiliation"></textarea>
+                              <label>Password</label>
+                              <input type="text" class="form-control" id="password" name="password" readonly>
                         </div>
                         <div class="form-group text-right mt-4">
                           <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
-                          <button type="submit" class="btn btn-success btn-add">Add</button>
+                          <button type="submit" class="btn btn-success btn-confirm-add-account">Add</button>
                         </div>
                       </div>
                     </div>
@@ -159,58 +151,153 @@
 @endsection
 @section('scripts')
 <script>  
+
+  function getRoles() {
+    $.ajax({
+      url: "/users/get-all-roles",
+      type: "GET",
+      success: function(data) {
+        var html = "<option value='' selected disabled>Select Role</option>";
+        $.each(data, function(x,y) {
+          html += '<option value="'+y.id+'">'+y.name+'</option>';
+        });
+        $('#select-role').html(html);
+      }
+    });
+  }
+
+  function getNewPassword() {
+    $.ajax({
+        type: 'GET',
+        url: '/user/get-new-password',
+        processData: false,
+        success: function(data) {
+        $('#password').val(data.password);
+        }
+      });
+  }
+
+  function appendOrganization() {
+    var html = "";
+
+    html += '<div class="form-group"> <label>Organization Name</label> <input type="text" class="form-control" name="organization_name" required> </div>';
+    html += '<div class="form-group"> <label>Organization Type</label> <select type="select" id="select-org-type" class="form-control" name="organization_type" required>'+
+    '<option value="" selected disabled>Select Organization Type</option>'+
+    '<option value="TYPE A">TYPE A</option>'+
+    '<option value="TYPE B">TYPE B</option>'+
+    '</select></div>';
+    html += '<div class="form-group"> <label>College</label> <select type="select" id="select-org-type" class="form-control" name="organization_college" required> <option value="" selected disabled>Select Organization Type</option> <option value="COLLEGE ONE">COLLEGE ONE</option> <option value="COLLEGE TWO">COLLEGE TWO</option> </select> </div>';
+    $('.organization-container').html(html);              
+  }
   $(document).ready(function() {
+    getRoles();
     var accounts;
      $('#account-management').addClass('active');
 
     accounts = $("#table-accounts").DataTable({
         ajax: {
-          url: "/",
+          url: "/users/get-all-users",
           dataSrc: ''
         },
         responsive:true,
-        "order": [[ 5, "desc" ]],
+        "order": [[ 6, "desc" ]],
         columns: [
-        { data: 'courier_id'},
-        { data: null},
-        { data: 'email' },
-        { data: 'contact_number' },
+        { data: 'id'},
+        { data: 'first_name' },
+        { data: 'last_name' },
+        { data: 'email'},
+        { data: 'student_number'},
+        { data: 'role.name'},
         { data: 'created_at'},
-        // { data: 'actions'},
-        {data: null ,
-                render : function ( data, type, row) {
-                  if(data['status'] == 'active') {
-                    return `<span class='switch switch-sm'> <input type='checkbox' class='switch change-status' name='${data['account_id']}' id='${data['account_id']}' data-id='${data['account_id']}' checked> <label for='${data['account_id']}'></label></span>`;
-                  }
-                  else {
-                    return `<span class='switch switch-sm'><input type='checkbox' class='switch change-status' name='${data['account_id']}' id='${data['account_id']}' data-id='${data['account_id']}'><label for='${data['account_id']}'></label></span>`;
-                  }
-                }
-              },
         { data: null,
           render: function ( data, type, row ) {
-            return "<button type='button' class='btn btn-primary btn-sm btn-edit' data-id='"+data.courier_id+"' data-account='"+data.account_id+"'>Edit</button> <button class='btn btn-secondary btn-sm btn-delete' data-function='deleteCourier' data-id='"+data.courier_id+"' data-account='"+data.account_id+"'>Delete</button>";
+            // <button type='button' class='btn btn-primary btn-sm btn-edit' data-id='"+data.id+"' data-account='"+data.id+"'>Edit</button> 
+            return "<button class='btn btn-danger btn-sm btn-delete' data-id='"+data.id+"' data-account='"+data.id+"'>Delete</button>";
           } 
         }
         ],
         columnDefs: [
         { className: "hidden", "targets": [0]},
-        { className: "acct-name", "targets": [1]},
-        {
-          "targets": 1,
-          "data": 'courier_name',
-          "render": function ( data, type, row ) {
-        var mname = (data.mname !== null) ? data.mname : "";
-        var profile_pic = (data.profile_pic !== null && data.profile_pic != "") ? '/storage/users/couriers/'+data.profile_pic : "{{asset('images/user.png')}}";
-            return '<img class="table-user-pic" src="'+profile_pic+'">'+data.fname +' '+mname+' '+data.lname;
-          } 
-        }
         ]
     });
 
     $(document).on('click', '#btn-add-account', function() {
       $('#add-account-modal').modal('show');
+      getNewPassword();
     });
+
+    $(document).on('change', '#select-role', function() {
+      var val = $(this).val();
+
+      if(val != 3){
+        $('.student-number-container').show();
+      }
+      else {
+        $('.student-number-container').hide();
+      }
+
+      if(val != 1){
+        $('.organization-container').html("");
+      }
+      else {
+        appendOrganization();
+        $('.organization-container').show();
+      }
+
+    });
+
+
+    $(document).on('submit', '#form-add-account', function() {
+       $.ajax({
+            url: "register",
+            type: "POST",
+            beforeSend: function(request) {
+              request.setRequestHeader("Authority", "{{csrf_token()}}");
+            },
+            data: $(this).serialize(),
+            processData: false,
+            success: function(data) {
+              if (data.token !== undefined) {
+                alert("Account Successfully Added!");
+                location.reload();
+              }
+            },
+            error: function(data) {
+              if(data.status == 400) {
+                console.log(data);
+                    var errors = $.parseJSON(data.responseText);
+                    $.each(errors, function (key, val) {
+                      alert(val);
+                    });
+                }
+            }
+
+          });
+            return false;
+    });
+
+    $(document).on('click', '.btn-delete', function() {
+      var confirm_alert = confirm("Are you sure you want to delete this account?");
+      if (confirm_alert == true) {
+       var id  = $(this).attr('data-id');
+       $.ajax({
+            url: "/user/delete/"+id,
+            type: "DELETE",
+            data: {
+              _token: "{{csrf_token()}}"
+            },
+            success: function(data) {
+              if (data.user) {
+                alert("Account Successfully Deleted!");
+                location.reload();
+              }
+            }
+
+          });
+      }
+    });
+
+
   });
 </script>
 @endsection

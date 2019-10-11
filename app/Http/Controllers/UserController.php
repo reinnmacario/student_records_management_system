@@ -6,6 +6,7 @@ use App\User;
 use App\Organization;
 use App\SOCC;
 use App\OSA;
+use App\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -24,7 +25,7 @@ class UserController extends Controller
             if(!$token = JWTAuth::attempt($credentials))
             {
                 return response()->json([
-                    'error' => 'invalid_credentials'
+                    'error' => 'Invalid Credentials'
                 ], 400);
             }
         }
@@ -37,6 +38,8 @@ class UserController extends Controller
 
         // Retrieve the entire user instance 
         $user = User::where('email', $request->input('email'))->first();
+        session(['user_id' => $user->id, 'role_id' => $user->role_id, 'first_name' => $user->first_name, 'last_name' => $user->last_name]);
+
         $role_instance = static::getUserRoleInstance($user);
         /* $user->role = $role_instance; */
         return response()->json([
@@ -52,7 +55,7 @@ class UserController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+            'password' => 'required|string|min:6',
         ]);
 
         if($validator->fails()){
@@ -73,6 +76,12 @@ class UserController extends Controller
         $token = JWTAuth::fromUser($user);
 
         return response()->json(compact('user','token'),201);
+    }
+
+
+    public function getAllRoles() {
+        $roles = Role::all();
+        return response()->json($roles);
     }
 
     private static function createUser(Request $request)
@@ -132,6 +141,13 @@ class UserController extends Controller
         /* } */
     }
 
+    public function generateNewPassword() {
+        $password_length = 6;
+        $password = substr(str_shuffle(str_repeat($x = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($password_length / strlen($x)))), 1, $password_length);
+
+        return compact('password');
+    }
+
     public function getAuthenticatedUser()
     {
         try {
@@ -186,6 +202,13 @@ class UserController extends Controller
         return response()->json($context);
     }
 
+    public function getAllUsers()
+    {
+        $users = User::with('role')->get();
+        return response()->json($users);
+    }
+
+
     public function destroy($id)
     {
         $user = User::find($id);
@@ -202,6 +225,10 @@ class UserController extends Controller
                 'status' => 'User not found'
             ]);
         }
+    }
+
+    public function showDashboard() {   
+        return view('dashboard.dashboard');
     }
 
     // Helper Functions

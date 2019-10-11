@@ -7,6 +7,7 @@
 
 @endsection
 @section('content')
+
       <div id="content-wrapper">
 
         <div class="container-fluid">
@@ -161,6 +162,32 @@
     $(document).on('click', '#btn-add-project', function() {
       $('#add-project-modal').modal('show');
     });
+
+    $.ajax({
+            url: "asa",
+            type: "POST",
+            beforeSend: function(request) {
+              request.setRequestHeader("Authority", "{{csrf_token()}}");
+            },
+            data: $(this).serialize(),
+            processData: false,
+            success: function(data) {
+              if (data.token !== undefined) {
+                // window.location.href = "/dashboard";
+              }
+             
+            },
+            error: function(data) {
+              if(data.status == 400) {
+                console.log(data);
+                    var errors = $.parseJSON(data.responseText);
+                    $.each(errors, function (key, val) {
+                      alert(val);
+                    });
+                }
+            }
+          });
+    
   });
 </script>
 @endsection
