@@ -7,6 +7,7 @@ use App\Organization;
 use App\SOCC;
 use App\OSA;
 use App\Role;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -18,34 +19,47 @@ class UserController extends Controller
 {
     public function authenticate(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $email = $request->email;
+        $password = $request->password;
 
-        try
-        {
-            if(!$token = JWTAuth::attempt($credentials))
-            {
-                return response()->json([
-                    'error' => 'Invalid Credentials'
-                ], 400);
-            }
+        if (Auth::attempt(['email' => $email, 'password' => $password])) {
+            $user = User::where('email', $request->input('email'))->first();
+            session(['user_id' => $user->id, 'role_id' => $user->role_id, 'first_name' => $user->first_name, 'last_name' => $user->last_name]);
+
+            $role_instance = static::getUserRoleInstance($user);
+
+            return response()->json(['url' => '/dashboard', 'success' => true]);
+
         }
-        catch(JWTException $e)
-        {
-            return response()->json([
-                'error' => 'could_not_create_token'
-            ], 500);
+        else {
+            return response()->json(['error' => 'Invalid login details.', 'success' => false]);
         }
+
+
+        // $credentials = $request->only('email', 'password');
+        // try
+        // {
+        //     if(!$token = JWTAuth::attempt($credentials))
+        //     {
+        //         return response()->json([
+        //             'error' => 'Invalid Credentials'
+        //         ], 400);
+        //     }
+        // }
+        // catch(JWTException $e)
+        // {
+        //     return response()->json([
+        //         'error' => 'could_not_create_token'
+        //     ], 500);
+        // }
 
         // Retrieve the entire user instance 
-        $user = User::where('email', $request->input('email'))->first();
-        session(['user_id' => $user->id, 'role_id' => $user->role_id, 'first_name' => $user->first_name, 'last_name' => $user->last_name]);
-
-        $role_instance = static::getUserRoleInstance($user);
+       
         /* $user->role = $role_instance; */
-        return response()->json([
-            'token' => $token,
-            'user' => $user,
-        ]);
+        // return response()->json([
+        //     'token' => $token,
+        //     'user' => $user,
+        // ]);
         /* return response()->json(compact('token', 'user', 'role_instance')); */
     }
 
@@ -73,9 +87,10 @@ class UserController extends Controller
         $sub_user = static::createSubUser($request, $user->id);
         $sub_user->save();
 
-        $token = JWTAuth::fromUser($user);
+        // $token = JWTAuth::fromUser($user);
 
-        return response()->json(compact('user','token'),201);
+        // return response()->json(compact('user','token'),201);
+        return response()->json(['success' => true]);
     }
 
 

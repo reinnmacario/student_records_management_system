@@ -16,14 +16,14 @@ class Controller extends BaseController
 
     protected static function getCurrentUser()
     {
-        return JWTAuth::parseToken()->authenticate();
+        return auth()->user();
+        //return JWTAuth::parseToken()->authenticate();
     }
 
     protected static function getUserRoleInstance($user = null)
     {
-        $user = $user ?: JWTAuth::parseToken()->authenticate();
-
-        switch($user->role_id)
+        $user = auth()->user();
+        switch(auth()->user()->role_id)
         {
             case Config::get('constants.roles.organization'):
                 return $user->organization;

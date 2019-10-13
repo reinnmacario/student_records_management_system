@@ -58,17 +58,6 @@
                     </tr>
                   </tfoot>
                   <tbody>
-                    
-                    <tr>
-                      <td>Donna Snider</td>
-                      <td>Customer Support</td>
-                      <td>New York</td>
-                      <td>27</td>
-                      <td>2011/01/25</td>
-                      <td>$112,000</td>
-                      <td>sad</td>
-                      <td></td>
-                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -251,27 +240,16 @@
        $.ajax({
             url: "register",
             type: "POST",
-            beforeSend: function(request) {
-              request.setRequestHeader("Authority", "{{csrf_token()}}");
-            },
             data: $(this).serialize(),
-            processData: false,
             success: function(data) {
-              if (data.token !== undefined) {
+              if (data.success === true) {
                 alert("Account Successfully Added!");
                 location.reload();
               }
-            },
-            error: function(data) {
-              if(data.status == 400) {
-                console.log(data);
-                    var errors = $.parseJSON(data.responseText);
-                    $.each(errors, function (key, val) {
-                      alert(val);
-                    });
-                }
+              else {
+                alert("Something went wrong");
+              }
             }
-
           });
             return false;
     });

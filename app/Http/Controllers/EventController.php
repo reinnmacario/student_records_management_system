@@ -19,22 +19,22 @@ class EventController extends Controller
      */
     public function index(Request $request)
     {
-        $user = static::getCurrentUser();
+        $user = auth()->user();
         $role_user = static::getUserRoleInstance();
 
-        if($user->role_id == Config::get('constants.roles.organization'))
+        if($user->role_id == 1)
         {
             /* $events = $role_user->events()->with('speakers')->with('students')->get(); */
             $events = $role_user->events()->get();
         }
-        elseif($user->role_id == Config::get('constants.roles.socc'))
+        elseif($user->role_id == 2)
         {
             $events = Event::whereIn('status', [
                 Config::get('constants.event_status.socc_approval'),
                 Config::get('constants.event_status.osa_rejection'),
             ])->get();
         }
-        elseif($user->role_id == Config::get('constants.roles.osa'))
+        elseif($user->role_id == 3)
         {
             if($request->input('all') == true)
             {
@@ -47,13 +47,9 @@ class EventController extends Controller
                     Config::get('constants.event_status.archived'),
                 ])->get();
             }
-        }
 
-        return response()->json([
-            /* 'user' => $user, */
-            /* 'role_user' => $role_user, */
-            'events' => $events,
-        ]);
+        }
+        print_r(json_encode($events));
     }
 
     /**
@@ -71,25 +67,27 @@ class EventController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateEvent $request)
+    public function store(Request $request)
     {
         /* if(Event::where('ereserve_id', $request->input('ereserve_id'))->count()) */
         /* { */
         /*     return response() */
         /* } */
-        $user = static::getCurrentUser();
+        $user = auth()->user();
         $event = new Event();
         $event->name = $request->input('name');
         $event->academic_year = $request->input('academic_year');
         $event->date_start = $request->input('date_start');
-        $event->status = $request->input('status'); 
+        $event->status = 1; 
         $event->ereserve_id = $request->input('ereserve_id');
-        $event->read_status = $request->input('read_status');
+        $event->read_status = 0;
+        $event->description = $request->input('description');
         $event->classification = $request->input('classification');
         $event->organization_id = $user->id;
         $event->save();
 
         return response()->json([
+            'success' => true,
             'event' => $event
         ]);
     }
@@ -103,14 +101,14 @@ class EventController extends Controller
     
     public function show($id)
     {
-        $user = static::getCurrentUser();
+        $user = auth()->user();
         $role_user = static::getUserRoleInstance();
-        if($user->role_id == Config::get('constants.roles.organization'))
+        if($user->role_id == 1)
         {
             $event = $role_user->events()->where('event.id', $id)->with('speakers')->with('students')->get();
             /* $event = $role_user->events()->find($id); */
         }
-        elseif($user->role_id == Config::get('constants.roles.socc'))
+        elseif($user->role_id == 2)
         {
             $event = Event::whereIn('status',[
                 Config::get('constants.event_status.socc_approval'),
@@ -119,7 +117,7 @@ class EventController extends Controller
                 ->where('id', $id)
                 ->get();
         }
-        elseif($user->role_id == Config::get('constants.roles.osa'))
+        elseif($user->role_id == 3)
         {
             $event = Event::whereIn('status',[
                 Config::get('constants.event_status.osa_approval'),
@@ -202,21 +200,23 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy()
     {
-        $event = Event::find($id);
+        $event = Event::find($request->id);
         if($event)
         {
             $event->status = Config::get('constants.event_status.archived');
             $event->save();
             $event->delete();
             return response()->json([
+                'success' => true,
                 'event' => $event
             ]);
         }
         else 
         {
             return response()->json([
+                'success' => false,
                 'error' => 'Event not found'
             ]);
         }

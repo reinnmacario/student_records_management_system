@@ -93,24 +93,18 @@
             data: $(this).serialize(),
             processData: false,
             success: function(data) {
-              if (data.token !== undefined) {
-                window.location.href = "/dashboard";
+              if (data.success === true)  {
+                localStorage.setItem('token', data.token);
+                window.location.href = data.url;
               }
+              else {
+                alert(data.error);
+              } 
+                
              
-            },
-            error: function(data) {
-              if(data.status == 400) {
-                console.log(data);
-                    var errors = $.parseJSON(data.responseText);
-                    $.each(errors, function (key, val) {
-                      alert(val);
-                    });
-                }
             }
           });
-
           return false;
-
         });
       });
     </script>

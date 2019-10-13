@@ -41,6 +41,8 @@ Route::get('/account-management', function () {
  Route::get('/users/get-all-roles', 'UserController@getAllRoles');
  Route::get('/users/get-all-users', 'UserController@getAllUsers');
 
+
+
 // Generate password manually for testing
 Route::get('password', 'Auth\RegisterController@generatePassword');
 
@@ -60,9 +62,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('register', 'UserController@register');
 Route::post('login', 'UserController@authenticate');
 Route::post('logout', 'UserController@authenticate');
-Route::group(['middleware' => ['jwt.verify']], function () {
+// Route::group(['middleware' => ['jwt.verify']], function () {
 
-    Route::get('events/show/{$id}', 'EventController@show');
     Route::resource('speakers', 'SpeakerController')->middleware('org.user');
     Route::post('speakers/{speaker_id}/events/{event_id}', "SpeakerController@assignToEvent");
     Route::delete('speakers/{speaker_id}/events/{event_id}', "SpeakerController@removeFromEvent");
@@ -85,12 +86,14 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     });
 
     Route::prefix('events')->group(function() {
-        Route::get('', 'EventController@index');
+        Route::get('all', 'EventController@index');
+        Route::get('show/{$id}', 'EventController@show');
         Route::get('/search', 'EventController@search');
         Route::get('archived', 'EventController@archived')->middleware('osa.user');
         Route::get('{id}', 'EventController@show');
         Route::put('{id}', 'EventController@update')->middleware('org.user', 'event.owner');
-        Route::post('', 'EventController@store')->middleware('org.user');
+        Route::post('store', 'EventController@store');
+        Route::delete('delete', 'EventController@destroy');
         Route::post('{event_id}/students/{student_id}', 'EventController@addStudent')->middleware('org.user');
         Route::post('{event_id}/speakers/{speaker_id}', 'EventController@addSpeaker')->middleware('org.user');
         Route::delete('{event_id}/students/{student_id}', 'EventController@removeStudent')->middleware('org.user');
@@ -106,7 +109,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('user', 'UserController@getAuthenticatedUser');
     Route::get('closed', 'DataController@closed');
     Route::get('test', 'DataController@test');
-});
+// });
 
 
 /**
