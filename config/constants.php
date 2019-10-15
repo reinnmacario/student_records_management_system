@@ -20,5 +20,9 @@ return [
     'read_status' => [
         'unread' => 0,
         'read' => 1
+    ],
+
+    'templates' => [
+        'title_second' => 'Student Record Management System'
     ]
 ];

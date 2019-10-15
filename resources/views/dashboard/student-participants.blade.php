@@ -1,6 +1,6 @@
 @extends('layouts.dashboard-master')
 @section('title')
-<title>Dashboard | Admin</title>
+<title>Student Participants | Admin</title>
 @endsection
 
 @section('styles')
@@ -20,39 +20,37 @@
             <li class="breadcrumb-item">
               <a href="dashboard">Dashboard</a>
             </li>
-            <li class="breadcrumb-item active">Projects</li>
+            <li class="breadcrumb-item active">Student Participants</li>
           </ol>
 
           <!-- DataTables Example -->
           <div class="card mb-3">
             <div class="card-header">
               <i class="fas fa-table"></i>
-              Dashboard</div>
+              Student Participants</div>
             <div class="card-body">
 
-              <button type="button" id="btn-add-project" class="btn btn-primary">Add Project</button>
+              <button type="button" id="btn-add-participant" class="btn btn-primary">Add Event Participant</button>
               <div class="table-responsive mt-3">
-                <table class="table table-bordered dt-responsive" id="table-projects" width="100%" cellspacing="0">
+                <table class="table table-bordered dt-responsive" id="table-participants" width="100%" cellspacing="0">
                   <thead>
                     <tr>
                       <th class="hidden">ID</th>
-                      <th>eReserve No.</th>
                       <th>Event Name</th>
-                      <th>Academic Year</th>
-<!--                       <th>Semester</th> -->
-                      <th>Date Submitted</th>
-                      <th>Status</th>
+                      <th>Student Name</th>
+                      <th>Involvement</th>
+                      <th>Date Created</th>
+                      <th>Actions</th>
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
                       <th class="hidden">ID</th>
-                      <th>eReserve No.</th>
                       <th>Event Name</th>
-                      <th>Academic Year</th>
-<!--                       <th>Semester</th> -->
-                      <th>Date Submitted</th>
-                      <th>Status</th>
+                      <th>Student Name</th>
+                      <th>Involvement</th>
+                      <th>Date Created</th>
+                      <th>Actions</th>
                     </tr>
                   </tfoot>
                   <tbody>
@@ -67,11 +65,11 @@
       </div>
 
       <!-- Modal -->
-    <div class="modal fade" id="add-project-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal fade" id="add-participant-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Add New Project</h5>
+            <h5 class="modal-title" id="exampleModalLongTitle">Add New Participant</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -80,51 +78,26 @@
             <div class="tab-content" id="nav-tabContent">
               <div class="tab-pane fade show active" id="nav-add" role="tabpanel" aria-labelledby="nav-home-tab">
 
-                <form id="form-add-event">
+                <form id="form-add-participant">
                    <input type="hidden" name="_token" value="{{csrf_token()}}">
                   <div class="container my-2">
                     <div class="row">
                       <div class="col-md-12">
-                        <div class="form-row">
-                          <div class="col-md-6">
-                            <label>eReserve No.</label>
-                            <input type="text" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="ereserve_id" required>
-                          </div>
-                        </div>
-                        <div class="form-row">
-                          <div class="col-md-6">
-                            <label>Event name</label>
-                            <input type="text" class="form-control" name="name">
-                          </div>
-                          <div class="col-md-6">
-                            <label>Start of Event Date</label>
-                            <input type="date" class="form-control" id="date_start" name="date_start" required>
-                          </div>
-                        </div>
-                       
                         <div class="form-group">
-                          <div class="form-row">
-                            <div class="col-md-6">
-                              <label>Academic Year</label>
-                              <input type="text" class="form-control" id="academic_year" name="academic_year">
-                            </div>
-                           <!--  <div class="col-md-6">
-                              <label>Semester</label>
-                              <input type="text" class="form-control" id="semester" name="semester">
-                            </div> -->
-                          </div>
+                            <label>Event</label>
+                            <select type="select" id="select-event" class="form-control" name="event" required>
+                              <option value="" selected disabled>Select Event</option>
+                            </select>
                         </div>
                         <div class="form-group">
-                          <label>Event Description</label>
-                          <textarea class="form-control" name="description"></textarea>
+                            <label>Student</label>
+                            <select type="select" id="select-student" class="form-control" name="student" required>
+                              <option value="" selected disabled>Select Student</option>
+                            </select>
                         </div>
                         <div class="form-group">
-                          <label>Speaker Name</label>
-                          <input type="text" class="form-control" id="speaker_name" name="speaker_name">
-                        </div>
-                        <div class="form-group">
-                          <label>Speaker Affiliation</label>
-                          <textarea class="form-control" name="classification"></textarea>
+                            <label>Involvement</label>
+                            <input type="text" class="form-control" name="involvement">
                         </div>
                         <div class="form-group text-right mt-4">
                           <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
@@ -148,40 +121,70 @@
 @endsection
 @section('scripts')
 <script>  
-  var projects;
+
+   function getAllEvents() {
+    $.ajax({
+            url: "events/get-all-events",
+            type: "GET",
+            success: function(data) {
+              var html = '<option value="" selected disabled>Select Event</option>';
+              $.each(data, function(x,y) {
+                  html += '<option value="'+y.id+'">'+y.name+'</option>';
+              });
+              $('#select-event').html(html);
+            }
+          });
+
+  }
+
+
+  function getAllStudents() {
+    $.ajax({
+            url: "students",
+            type: "GET",
+            success: function(data) {
+              var html = '<option value="" selected disabled>Select Student</option>';
+              $.each(data, function(x,y) {
+                  html += '<option value="'+y.id+'">'+y.first_name+ " "+y.middle_initial+" "+y.last_name+'</option>';
+              });
+              $('#select-student').html(html);
+            }
+          });
+
+  }
+
+  var participants;
   var token = "{{csrf_token()}}";
   $(document).ready(function() {
-     $('#dashboard').addClass('active');
-    projects = $("#table-projects").DataTable({
+    getAllEvents();
+    getAllStudents();
+     $('#student-participants').addClass('active');
+    participants = $("#table-participants").DataTable({
         ajax: {
-          url: "/events/all",
+          url: "students/get-event-participants",
           type: "GET",
           dataSrc: "", 
 
         },
         responsive:true,
-        "order": [[ 5, "desc" ]],
+        "order": [[ 4, "desc" ]],
         columns: [
         { data: 'id'},
-        { data: 'ereserve_id' },
         { data: 'name' },
-        { data: 'academic_year'},
+        { data: null,
+            render: function ( data, type, row ) { 
+            return data.first_name+" "+data.middle_initial+" "+data.last_name;
+          } 
+         },
         // { data: 'semester'},
+        { data: 'involvement'},
         { data: 'created_at'},
         { data: null,
           render: function ( data, type, row ) { 
-            var status_name = "";
-            if (data.status == 1) {
-              status_name = "Processing";
-            } 
-            else  if (data.status == 2) {
-              status_name = "For Completion";
-            }
-            else if (data.status == 3) {
-              status_name = "Completed";
-            }
-            return status_name;
-            // return "<span class="badge badge-primary">Primary</span>";
+            var html = "";
+            //html += '<button type="button" class="btn btn-primary">Edit</button> ';
+            html += '<button type="button" class="btn btn-danger btn-delete">Delete</button>';
+            return html;
           } 
         }
         ],
@@ -190,22 +193,23 @@
         ]
     });
 
-    $(document).on('click', '#btn-add-project', function() {
-      $('#add-project-modal').modal('show');
+
+    $(document).on('click', '#btn-add-participant', function() {
+      $('#add-participant-modal').modal('show');
     });
 
-    $(document).on('submit', '#form-add-event', function() {
+    $(document).on('submit', '#form-add-participant', function() {
        $.ajax({
-            url: "events/store",
+            url: "students/events/add",
             type: "POST",
             data: $(this).serialize(),
             success: function(data) {
               if (data.success === true) {
-                alert("Event Successfully Added!");
+                alert("Participant Successfully Added!");
                 location.reload();
               }
               else {
-                alert("Something went wrong");
+                alert(data.error);
               }
             }
           });
@@ -213,11 +217,11 @@
     });
 
     $(document).on('click', '.btn-delete', function() {
-      var confirm_alert = confirm("Are you sure you want to delete this event?");
+      var confirm_alert = confirm("Are you sure you want to delete this participant?");
       if (confirm_alert == true) {
        var id  = $(this).attr('data-id');
        $.ajax({
-            url: "events/delete",
+            url: "participant/delete",
             type: "DELETE",
             data: {
               id: id,
@@ -225,7 +229,7 @@
             },
             success: function(data) {
               if (data.success === true) {
-                alert("Event Successfully Deleted!");
+                alert("Participants Successfully Deleted!");
                 location.reload();
               }
             }

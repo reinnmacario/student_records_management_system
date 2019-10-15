@@ -35,6 +35,24 @@ Route::get('/search', function () {
 Route::get('/account-management', function () {
     return view('dashboard.account-management');
 });
+
+Route::get('/student-list', function () {
+    return view('dashboard.student-list');
+});
+
+Route::get('/speaker-list', function () {
+    return view('dashboard.speaker-list');
+});
+
+Route::get('/student-participants', function () {
+    return view('dashboard.student-participants');
+});
+
+Route::get('/event-speakers', function () {
+    return view('dashboard.event-speaker');
+});
+
+
 //  End
 
 
@@ -63,7 +81,9 @@ Route::post('register', 'UserController@register');
 Route::post('login', 'UserController@authenticate');
 Route::post('logout', 'UserController@authenticate');
 // Route::group(['middleware' => ['jwt.verify']], function () {
-
+    Route::get('speakers/index', "SpeakerController@index");
+    Route::post('speakers/store', "SpeakerController@store");
+    Route::post('speakers/update', "SpeakerController@update");
     Route::resource('speakers', 'SpeakerController')->middleware('org.user');
     Route::post('speakers/{speaker_id}/events/{event_id}', "SpeakerController@assignToEvent");
     Route::delete('speakers/{speaker_id}/events/{event_id}', "SpeakerController@removeFromEvent");
@@ -77,16 +97,23 @@ Route::post('logout', 'UserController@authenticate');
 
     Route::prefix('students')->group(function() {
         Route::get('', 'StudentController@index');
+        Route::get('get-event-participants', 'StudentController@getEventParticipants');
         Route::get('{id}', 'StudentController@show');
         Route::get('{id}/generate-report', 'StudentController@generateReport')->middleware('osa.user');
         Route::put('{id}', 'StudentController@update');
-        Route::post('', 'StudentController@store')->middleware('org.user');
-        Route::post('{student_id}/events/{event_id}', 'StudentController@assignToEvent')->middleware('org.user');
+        Route::post('store', 'StudentController@store')->middleware('org.user');
+        Route::post('/events/add', 'StudentController@assignToEvent')->middleware('org.user');
         Route::delete('{student_id}/events/{event_id}', 'StudentController@removeFromEvent')->middleware('org.user');
     });
 
     Route::prefix('events')->group(function() {
         Route::get('all', 'EventController@index');
+        Route::get('get-all-events', 'EventController@getAllEvents');
+        Route::get('get-all-event-speakers', 'EventController@getAllEventSpeakers');
+        Route::post('get-all-speakers', 'EventController@getAllSpeakers');
+
+        Route::delete('speaker', 'EventController@deleteEventSpeaker');
+
         Route::get('show/{$id}', 'EventController@show');
         Route::get('/search', 'EventController@search');
         Route::get('archived', 'EventController@archived')->middleware('osa.user');
@@ -95,7 +122,7 @@ Route::post('logout', 'UserController@authenticate');
         Route::post('store', 'EventController@store');
         Route::delete('delete', 'EventController@destroy');
         Route::post('{event_id}/students/{student_id}', 'EventController@addStudent')->middleware('org.user');
-        Route::post('{event_id}/speakers/{speaker_id}', 'EventController@addSpeaker')->middleware('org.user');
+        Route::post('/speakers/add', 'EventController@addSpeaker')->middleware('org.user');
         Route::delete('{event_id}/students/{student_id}', 'EventController@removeStudent')->middleware('org.user');
         Route::delete('{event_id}/speakers/{speaker_id}', 'EventController@removeSpeaker')->middleware('org.user');
         Route::delete('{id}', 'EventController@destroy')->middleware('osa.user');
@@ -104,6 +131,11 @@ Route::post('logout', 'UserController@authenticate');
             Route::put('approve/{id}', 'EventController@approve');
             Route::put('reject/{id}', 'EventController@reject');
         });
+    });
+
+    Route::group(['middleware' => 'auth', 'prefix' => 'auth'], function () {
+        Route::post('/update-password', 'UserController@updatePassword');
+        Route::post('/update-profile', 'Auth\UsersController@updateProfile');
     });
 
     Route::get('user', 'UserController@getAuthenticatedUser');

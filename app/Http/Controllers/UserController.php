@@ -32,7 +32,7 @@ class UserController extends Controller
 
         }
         else {
-            return response()->json(['error' => 'Invalid login details.', 'success' => false]);
+            return response()->json(['error' => 'Invalid credentials.', 'success' => false]);
         }
 
 
@@ -245,6 +245,105 @@ class UserController extends Controller
     public function showDashboard() {   
         return view('dashboard.dashboard');
     }
+
+    public function getArchivedUsers() {
+        return response()->json([
+            'users' => User::onlyTrashed()->get()
+        ]);
+    }
+
+    // public function changePassword(ChangePassword $request) 
+    // {
+    //     $user = static::getCurrentUser();
+
+    //     if(Hash::check($request->input('password'), $user->password))
+    //     {
+    //         return response()->json([
+    //             'error' => 'New password cannot be the same as the old password'
+    //         ]);
+    //     }
+    //     else 
+    //     {
+    //         $user->password = Hash::make($request->input('password'));
+    //         $user->save();
+    //         return response()->json([
+    //             'user' => $user,
+    //             'message' => 'Password updated'
+    //         ]);
+    //     }
+    // }
+
+    public function UpdatePassword(Request $request)
+    {
+        $user = User::find(auth()->user()->id);
+        $field = array();
+        $message = '';
+        if ($request->new_password === $request->confirm_password && Hash::check($request->current_password, $user->password)) {
+            if (Hash::check($request->new_password, $user->password)) {
+                $status = false;
+                $result = "error";
+                $message = "New password cannot be the same as your current password.";
+            } else {
+                $user->password = Hash::make($request->new_password);
+
+                $user->save();
+                $status = true;
+                $result = "success";
+                $message = "You have successfully updated your password.";
+            }
+        } else {
+            $status = false;
+            $result = "error";
+            if (!Hash::check($request->current_password, $user->password)) {
+                $message = "Incorrect Password";
+                $field[] = array('field' => 'current_password', 'message' => $message);
+            }
+            if ($request->new_password != $request->confirm_password) {
+                $message = "New Password does not match";
+                $field[] = array('field' => 'confirm_password', 'message' => $message);
+            }
+        }
+
+        $response = array(
+            "success" => $status,
+            "result" => $result,
+            "message" => $message,
+            "field" => $field,
+        );
+
+        return response()->json($response);
+    }
+
+    public function massDeactivate() 
+    {
+        $users = User::where('role_id', '<>', Config::get('constants.roles.osa'));
+
+        $deactivated_users = $users->get();
+        $deactivated_user_count = $users->count();
+
+        $users->delete();
+
+        return response()->json([
+            'users' => $deactivated_users,
+            'count' => $deactivated_user_count
+        ]);
+    }
+
+    public function massActivate() 
+    {
+        $users = User::onlyTrashed()->where('role_id', '<>', Config::get('constants.roles.osa'));
+
+        $activated_users = $users->get();
+        $activated_user_count = $users->count();
+
+        $users->restore();
+
+        return response()->json([
+            'users' => $activated_users,
+            'count' => $activated_user_count
+        ]);
+    }
+
 
     // Helper Functions
 }

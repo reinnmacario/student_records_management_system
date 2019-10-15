@@ -24,29 +24,31 @@
           <div class="col-md-12">
             <div class="card dashboard-card mt-4 mb-4">
               <div class="card-body">
-                <form action="" method="post">
-                  <div class="row">
-                  <div class="col-md-3"></div>
-                <div class="col-md-5 mt-3">
-                  <div id="message" class="hidden"></div>
-                  <div class="form-group mt-1">
-                    <label class="standard-field-label">Current Password <span class="required">*</span></label>
-                      <input type="password" class="form-control standard-form-field req" name="current_password" id="current-password">
-                  </div> 
-                  <div class="form-group">
-                    <label class="standard-field-label">New Password <span class="required">*</span></label>
-                      <input type="password" class="form-control standard-form-field req" name="new_password" id="new-password">
-                  </div>
-                  <div class="form-group">
-                    <label class="standard-field-label">Confirm New Password <span class="required">*</span></label>
-                      <input type="password" class="form-control standard-form-field req" name="confirm_new_password" id="confirm-new-password">
-                  </div> 
-                  <button type="button" class="btn btn-success btn-change-password">Confirm</button>
-                </div>
-                <div class="col-md-3">
-                  
-                </div>
-              </div>
+                <form id="form-change-password">
+                  @csrf
+                  <div class="form-row">
+                      <div class="col-md-6 offset-md-3">
+                          <label class="control-label">Current Password <span class="required">*</span></label>
+                          <input type="password" id="current_password" name="current_password" minlength="6" class="form-control password" required>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                       <div class="col-md-6 offset-md-3">
+                        <label class="control-label">New Password <span class="required">*</span></label>
+                        <input type="password" id="new_password" name="new_password" minlength="6" class="form-control password" required>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="col-md-6 offset-md-3">
+                            <label class="control-label">Confirm New Password <span class="required">*</span></label>
+                            <input type="password" id="confirm_password" name="confirm_password" minlength="6" class="form-control password" required>
+                      </div>
+                    </div>
+                    <div class="form-row mt-3">
+                      <div class="col-md-6 offset-md-3">
+                        <button type="submit" class="btn btn-success btn-save-password btn-md">Save Password</button>
+                      </div>
+                    </div>
               </form>
               </div>
             </div>
@@ -58,6 +60,40 @@
 </div>
 @endsection
 @section('scripts')
+<script>
+  
+  $(document).ready(function() {
+            $(document).on('submit', '#form-change-password', function(e) {
+                e.preventDefault();
+                $('.error-message').remove();
+                $('.password').removeClass('input-error');
+                $('.btn-save-password').addClass('disabled').html('<i class="fas fa-spinner fa-spin"></i>');
+                    var form = $(this);
+                    $.ajax({
+                       type: "POST",
+                       url: "/auth/update-password",
+                       data: form.serialize(),
+                       success: function(data) {
+                            if (data.result == 'error') {
+                                if (data.field.length > 0) {
+                                    $.each(data.field, function(x,y){
+                                        $('#'+y.field).addClass('input-error');
+                                        $("<span class='error-message'>"+y.message+"<br></span>").insertAfter('#'+y.field);
+                                    });
+                                } else {
+                                  alert('New password cannot be the same as your current password.');
+                                }
+                            } else {
+                              alert('You have successfully changed your password');
+                              location.reload();
+                            }
 
+                            $('.btn-save-password').removeClass('disabled').html('Save Password');
+                       }
+                     });
+            });
+        });
+
+</script>
 @endsection
 

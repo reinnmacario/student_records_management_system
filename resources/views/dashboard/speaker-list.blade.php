@@ -1,6 +1,6 @@
 @extends('layouts.dashboard-master')
 @section('title')
-<title>Dashboard | Admin</title>
+<title>Speaker List | {{config('constants.templates.title_second')}}</title>
 @endsection
 
 @section('styles')
@@ -20,39 +20,37 @@
             <li class="breadcrumb-item">
               <a href="dashboard">Dashboard</a>
             </li>
-            <li class="breadcrumb-item active">Projects</li>
+            <li class="breadcrumb-item active">Speaker List</li>
           </ol>
 
           <!-- DataTables Example -->
           <div class="card mb-3">
             <div class="card-header">
               <i class="fas fa-table"></i>
-              Dashboard</div>
+              Speaker List</div>
             <div class="card-body">
 
-              <button type="button" id="btn-add-project" class="btn btn-primary">Add Project</button>
+              <button type="button" id="btn-add-speaker" class="btn btn-primary">Add Speaker</button>
               <div class="table-responsive mt-3">
-                <table class="table table-bordered dt-responsive" id="table-projects" width="100%" cellspacing="0">
+                <table class="table table-bordered dt-responsive" id="table-speakers" width="100%" cellspacing="0">
                   <thead>
                     <tr>
                       <th class="hidden">ID</th>
-                      <th>eReserve No.</th>
-                      <th>Event Name</th>
-                      <th>Academic Year</th>
-<!--                       <th>Semester</th> -->
-                      <th>Date Submitted</th>
-                      <th>Status</th>
+                      <th>First Name</th>
+                      <th>Last Name</th>
+                      <th>Description</th>
+                      <th>Date Created</th>
+                      <th>Actions</th>
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
                       <th class="hidden">ID</th>
-                      <th>eReserve No.</th>
-                      <th>Event Name</th>
-                      <th>Academic Year</th>
-<!--                       <th>Semester</th> -->
-                      <th>Date Submitted</th>
-                      <th>Status</th>
+                      <th>First Name</th>
+                      <th>Last Name</th>
+                      <th>Description</th>
+                      <th>Date Created</th>
+                      <th>Actions</th>
                     </tr>
                   </tfoot>
                   <tbody>
@@ -67,11 +65,11 @@
       </div>
 
       <!-- Modal -->
-    <div class="modal fade" id="add-project-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal fade" id="add-speaker-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Add New Project</h5>
+            <h5 class="modal-title speaker-modal-title" id="exampleModalLongTitle">Add New Speaker</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -79,64 +77,33 @@
           <div class="modal-body">
             <div class="tab-content" id="nav-tabContent">
               <div class="tab-pane fade show active" id="nav-add" role="tabpanel" aria-labelledby="nav-home-tab">
-
-                <form id="form-add-event">
-                   <input type="hidden" name="_token" value="{{csrf_token()}}">
+                <form class="form-speaker">
+                  <input type="hidden" name="_token" value="{{csrf_token()}}">
                   <div class="container my-2">
                     <div class="row">
                       <div class="col-md-12">
                         <div class="form-row">
                           <div class="col-md-6">
-                            <label>eReserve No.</label>
-                            <input type="text" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="ereserve_id" required>
-                          </div>
-                        </div>
-                        <div class="form-row">
-                          <div class="col-md-6">
-                            <label>Event name</label>
-                            <input type="text" class="form-control" name="name">
+                            <label>First name</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name" required>
                           </div>
                           <div class="col-md-6">
-                            <label>Start of Event Date</label>
-                            <input type="date" class="form-control" id="date_start" name="date_start" required>
+                            <label>Last Name</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name" required>
                           </div>
                         </div>
-                       
-                        <div class="form-group">
-                          <div class="form-row">
-                            <div class="col-md-6">
-                              <label>Academic Year</label>
-                              <input type="text" class="form-control" id="academic_year" name="academic_year">
-                            </div>
-                           <!--  <div class="col-md-6">
-                              <label>Semester</label>
-                              <input type="text" class="form-control" id="semester" name="semester">
-                            </div> -->
-                          </div>
-                        </div>
-                        <div class="form-group">
+                        <div class="form-group mt-3">
                           <label>Event Description</label>
-                          <textarea class="form-control" name="description"></textarea>
-                        </div>
-                        <div class="form-group">
-                          <label>Speaker Name</label>
-                          <input type="text" class="form-control" id="speaker_name" name="speaker_name">
-                        </div>
-                        <div class="form-group">
-                          <label>Speaker Affiliation</label>
-                          <textarea class="form-control" name="classification"></textarea>
+                          <textarea class="form-control" id="description" name="description"></textarea>
                         </div>
                         <div class="form-group text-right mt-4">
                           <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
-                          <button type="submit" class="btn btn-success btn-add">Add</button>
+                          <button type="submit" class="btn btn-success btn-confirm">Confirm</button>
                         </div>
                       </div>
                     </div>
                   </div>
-
-
                 </form>
-
               </div>
             </div>
           </div>
@@ -148,40 +115,31 @@
 @endsection
 @section('scripts')
 <script>  
-  var projects;
+  var speakers;
   var token = "{{csrf_token()}}";
   $(document).ready(function() {
-     $('#dashboard').addClass('active');
-    projects = $("#table-projects").DataTable({
+     $('#speaker-list').addClass('active');
+    speakers = $("#table-speakers").DataTable({
         ajax: {
-          url: "/events/all",
+          url: "/speakers/index",
           type: "GET",
           dataSrc: "", 
 
         },
         responsive:true,
-        "order": [[ 5, "desc" ]],
+        "order": [[ 4, "desc" ]],
         columns: [
         { data: 'id'},
-        { data: 'ereserve_id' },
-        { data: 'name' },
-        { data: 'academic_year'},
-        // { data: 'semester'},
+        { data: 'first_name' },
+        { data: 'last_name' },
+        { data: 'description'},
         { data: 'created_at'},
         { data: null,
           render: function ( data, type, row ) { 
-            var status_name = "";
-            if (data.status == 1) {
-              status_name = "Processing";
-            } 
-            else  if (data.status == 2) {
-              status_name = "For Completion";
-            }
-            else if (data.status == 3) {
-              status_name = "Completed";
-            }
-            return status_name;
-            // return "<span class="badge badge-primary">Primary</span>";
+            var html = "";
+            html += '<button type="button" class="btn btn-primary btn-edit">Edit</button> ';
+            //html += '<button type="button" class="btn btn-danger btn-delete">Delete</button>';
+            return html;
           } 
         }
         ],
@@ -190,18 +148,21 @@
         ]
     });
 
-    $(document).on('click', '#btn-add-project', function() {
-      $('#add-project-modal').modal('show');
+    $(document).on('click', '#btn-add-speaker', function() {
+      $('.speaker-modal-title').html('Add New Speaker');
+      $('.form-speaker').attr('id', 'form-add-speaker');
+      $('#add-speaker-modal').modal('show');
     });
 
-    $(document).on('submit', '#form-add-event', function() {
+    $(document).on('submit', '#form-add-speaker', function(e) {
+      e.preventDefault();
        $.ajax({
-            url: "events/store",
+            url: "speakers/store",
             type: "POST",
             data: $(this).serialize(),
             success: function(data) {
               if (data.success === true) {
-                alert("Event Successfully Added!");
+                alert("Speaker Successfully Added!");
                 location.reload();
               }
               else {
@@ -212,12 +173,44 @@
             return false;
     });
 
+        $(document).on('submit', '#form-edit-speaker', function(e) {
+          e.preventDefault();
+         $.ajax({
+              url: "speakers/update",
+              type: "POST",
+              data: $(this).serialize()+ '&id='+$('.btn-confirm').attr('data-id'),
+              success: function(data) {
+                if (data.success === true) {
+                  alert("Speaker Successfully Updated!");
+                  location.reload();
+                }
+                else {
+                  alert(data.error);
+                }
+              }
+            });
+            return false;
+    });
+
+
+    $(document).on('click', '.btn-edit', function() {
+      var data = speakers.row( $(this).parents('tr') ).data();
+      $('.form-speaker').attr('id', 'form-edit-speaker');
+      $('.speaker-modal-title').html('Edit Speaker');
+      $('#first_name').val(data.first_name);
+      $('#last_name').val(data.last_name);
+      $('.btn-confirm').attr('data-id', data.id);
+      $('#description').val(data.description);
+      $('#add-speaker-modal').modal('show');
+    });
+
+
     $(document).on('click', '.btn-delete', function() {
-      var confirm_alert = confirm("Are you sure you want to delete this event?");
+      var confirm_alert = confirm("Are you sure you want to delete this speaker?");
       if (confirm_alert == true) {
        var id  = $(this).attr('data-id');
        $.ajax({
-            url: "events/delete",
+            url: "speaker/delete",
             type: "DELETE",
             data: {
               id: id,
@@ -225,7 +218,7 @@
             },
             success: function(data) {
               if (data.success === true) {
-                alert("Event Successfully Deleted!");
+                alert("Speaker Successfully Deleted!");
                 location.reload();
               }
             }

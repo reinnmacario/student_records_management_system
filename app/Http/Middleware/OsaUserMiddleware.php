@@ -17,8 +17,8 @@ class OsaUserMiddleware
      */
     public function handle($request, Closure $next)
     {
-        $user = JWTAuth::parseToken()->authenticate();
-        if($user->role_id != Config::get('constants.roles.osa'))
+        // $user = JWTAuth::parseToken()->authenticate();
+        if(auth()->user()->role_id != Config::get('constants.roles.osa'))
         {
             return response()->json([
                 'status' => 'Access denied'

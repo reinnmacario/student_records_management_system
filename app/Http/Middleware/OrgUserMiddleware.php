@@ -17,8 +17,8 @@ class OrgUserMiddleware
      */
     public function handle($request, Closure $next)
     {
-        $user = JWTAuth::parseToken()->authenticate();
-        if($user->role_id != Config::get('constants.roles.organization'))
+        // $user = JWTAuth::parseToken()->authenticate();
+        if(auth()->user()->role_id != Config::get('constants.roles.organization'))
         {
             return response()->json([
                 'status' => 'Access denied'

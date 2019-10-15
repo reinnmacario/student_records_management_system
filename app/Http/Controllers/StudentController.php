@@ -13,6 +13,7 @@ use App\Student;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
@@ -24,9 +25,18 @@ class StudentController extends Controller
     public function index()
     {
         $students = Student::all();
-        return response()->json([
-            'students' => $students
-        ]);
+        return response()->json(
+            $students
+        );
+    }
+
+
+    public function getEventParticipants()
+    {
+        $event_students = DB::table('event_student')->join('student', 'event_student.student_id', '=', 'student.id')
+        ->join('event', 'event_student.event_id', '=', 'event.id')->get();
+
+        return response()->json($event_students);
     }
 
     /**
@@ -38,6 +48,7 @@ class StudentController extends Controller
     {
         //
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -51,6 +62,7 @@ class StudentController extends Controller
         if($student)
         {
             return response()->json([
+                'success' => false,
                 'error' => "Student with the STUDENT_ID of {$request->input('student_id')} already exists",
             ]);
         }
@@ -63,6 +75,7 @@ class StudentController extends Controller
                 'middle_initial' => $request->input('middle_initial')
             ]);
             return response()->json([
+                'success' => true,
                 'student' => $student
             ]);
         }
@@ -133,8 +146,10 @@ class StudentController extends Controller
         //
     }
 
-    public function assignToEvent(Request $request, $student_id, $event_id)
+    public function assignToEvent(Request $request)
     {
+        $student_id = $request->student;
+        $event_id = $request->event;
         $student = Student::find($student_id);
         $event = Event::find($event_id);
 
@@ -143,6 +158,7 @@ class StudentController extends Controller
             if($student->events()->where('event.id', $event_id)->get()->count())
             {
                 return response()->json([
+                    'success' =>  false,
                     'error' => "Student with ID of $student_id has already been registered to event with ID of $event_id"
                 ]);
             }
@@ -150,6 +166,7 @@ class StudentController extends Controller
             {
                 $student->events()->attach($event_id, ['involvement' => $request->input('involvement')]);
                 return response()->json([
+                    'success' =>  true,
                     'student' => Student::find($student_id),
                     'event' => Event::find($event_id),
                     'involvement' => $request->input('involvement'),

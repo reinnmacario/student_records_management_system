@@ -52,6 +52,30 @@ class EventController extends Controller
         print_r(json_encode($events));
     }
 
+    public function getAllEvents(){
+        $events = Event::all();
+
+        return response()->json($events);
+    }
+
+
+    public function getAllEventSpeakers(){
+        $event_speakers = DB::table('event_speaker')->join('speaker', 'event_speaker.speaker_id', '=', 'speaker.id')
+        ->join('event', 'event_speaker.event_id', '=', 'event.id')->get();
+
+        return response()->json($event_speakers);
+    }
+
+
+    public function getAllSpeakers(Request $request){
+        $speakers = Speaker::all();
+        
+        return response()->json($speakers);
+    }
+
+
+
+
     /**
      * Show the form for creating a new resource.
      *
@@ -194,6 +218,12 @@ class EventController extends Controller
         }
     }
 
+
+    // public function deleteEventSpeaker(Request $request) {
+    //     DB::table('event_speaker')->where('event_speaker_id', $request->ids)->get();
+    // }
+
+    
     /**
      * Remove the specified resource from storage.
      *
@@ -423,8 +453,11 @@ class EventController extends Controller
         }
     }
 
-    public function addSpeaker($event_id, $speaker_id)
+    public function addSpeaker(Request $request)
     {
+        $speaker_id = $request->speaker;
+        $event_id = $request->event;
+
         $speaker = Speaker::find($speaker_id);
         $event = Event::find($event_id);
 
@@ -433,6 +466,7 @@ class EventController extends Controller
             if($event->speakers()->where('speaker.id', $speaker_id)->get()->count())
             {
                 return response()->json([
+                    'success' =>  false,
                     'error' => "Event with ID of $event_id already has a speaker with an ID of $speaker_id"
                 ]);
             }
@@ -440,6 +474,7 @@ class EventController extends Controller
             {
                 $event->speakers()->attach($speaker_id);
                 return response()->json([
+                    'success' =>  true,
                     'speaker' => Student::find($speaker_id),
                     'event' => Event::find($event_id),
                 ]);
@@ -459,6 +494,7 @@ class EventController extends Controller
             if($errors)
             {
                 return response()->json([
+                    'success' =>  false,
                     'errors' => $errors
                 ]);
             }

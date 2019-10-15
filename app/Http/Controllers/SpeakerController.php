@@ -17,9 +17,7 @@ class SpeakerController extends Controller
     public function index()
     {
         $speakers = Speaker::all();
-        return response()->json([
-            'speakers' => $speakers
-        ]);
+        print_r(json_encode($speakers));
     }
 
     /**
@@ -46,6 +44,7 @@ class SpeakerController extends Controller
             'description' => $request->input('description'),
         ]);
         return response()->json([
+            'success' => true,
             'speaker' => $speaker
         ]);
     }
@@ -56,11 +55,11 @@ class SpeakerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show()
     {
-        $speaker = Speaker::find($id);
+        $speaker = Speaker::all();
         return response()->json([
-            'speaker' => $speaker
+           $speaker
         ]);
     }
 
@@ -82,9 +81,9 @@ class SpeakerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(SpeakerRequest $request, $id)
+    public function update(SpeakerRequest $request)
     {
-        $speaker = Speaker::find($id);
+        $speaker = Speaker::find($request->id);
         if($speaker)
         {
             $speaker->first_name = $request->input('first_name');
@@ -93,12 +92,14 @@ class SpeakerController extends Controller
             $speaker->save();
 
             return response()->json([
+                'success' => true,
                 'speaker' => $speaker
             ]);
         }
         else 
         {
             return response()->json([
+                'success' => true,
                 'error' => "Speaker with an ID of $id not found"
             ]);
         }
