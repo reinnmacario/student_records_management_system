@@ -73,7 +73,7 @@ Route::get('logout', 'Auth\LoginController@logout');
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-/* Route::get('students/{id}/generate-report', 'StudentController@generateReport'); */
+Route::get('students/{id}/generate-report', 'StudentController@generateReport');
 
 /* Route::get('{student_id}/createReport', 'FileController@index'); */
 
@@ -107,6 +107,7 @@ Route::post('logout', 'UserController@authenticate');
     });
 
     Route::prefix('events')->group(function() {
+        Route::get('get-post-event-reports', 'EventController@getPostEventReports');
         Route::get('all', 'EventController@index');
         Route::get('get-all-events', 'EventController@getAllEvents');
         Route::get('get-all-event-speakers', 'EventController@getAllEventSpeakers');
@@ -127,10 +128,10 @@ Route::post('logout', 'UserController@authenticate');
         Route::delete('{event_id}/speakers/{speaker_id}', 'EventController@removeSpeaker')->middleware('org.user');
         Route::delete('{id}', 'EventController@destroy')->middleware('osa.user');
 
-        Route::group(['middleware' => ['event.inspectors']], function() {
-            Route::put('approve/{id}', 'EventController@approve');
-            Route::put('reject/{id}', 'EventController@reject');
-        });
+        // Route::group(['middleware' => ['event.inspectors']], function() {
+            Route::post('approve', 'EventController@approve');
+            Route::post('reject', 'EventController@reject');
+        // });
     });
 
     Route::group(['middleware' => 'auth', 'prefix' => 'auth'], function () {

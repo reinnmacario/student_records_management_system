@@ -17,8 +17,9 @@ class EventInspectors
      */
     public function handle($request, Closure $next)
     {
-        $user = JWTAuth::parseToken()->authenticate();
-        if(!in_array($user->role_id, [Config::get('constants.roles.socc'), Config::get('constants.roles.osa')]))
+        // $user = JWTAuth:parseToken()->authenticate();
+        echo auth()->user()->role_id; die;
+        if(!in_array(auth()->user()->role_id, [Config::get('constants.roles.socc'), Config::get('constants.roles.osa')]))
         {
             return response()->json([
                 'status' => 'Access denied'

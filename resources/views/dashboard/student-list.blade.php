@@ -39,7 +39,7 @@
                       <th>Student ID</th>
                       <th>Student Name</th>
                       <th>Date Created</th>
-                      <th>Actions</th>
+                      <!-- <th>Actions</th> -->
                     </tr>
                   </thead>
                   <tfoot>
@@ -48,7 +48,7 @@
                       <th>Student ID</th>
                       <th>Student Name</th>
                       <th>Date Created</th>
-                      <th>Actions</th>
+                      <!-- <th>Actions</th> -->
                     </tr>
                   </tfoot>
                   <tbody>
@@ -142,14 +142,14 @@
          },
         // { data: 'semester'},
         { data: 'created_at'},
-        { data: null,
-          render: function ( data, type, row ) { 
-            var html = "";
-            html += '<button type="button" class="btn btn-primary">Edit</button> ';
-            //html += '<button type="button" class="btn btn-danger">Delete</button>';
-            return html;
-          } 
-        }
+        // { data: null,
+        //   render: function ( data, type, row ) { 
+        //     var html = "";
+        //     html += '<button type="button" class="btn btn-primary">Edit</button> ';
+        //     //html += '<button type="button" class="btn btn-danger">Delete</button>';
+        //     return html;
+        //   } 
+        // }
         ],
         columnDefs: [
         { className: "hidden", "targets": [0]},

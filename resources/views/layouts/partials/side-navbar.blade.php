@@ -12,12 +12,7 @@
           </a>
         </li>
         @if(auth()->user()->role_id == 3)
-        <li id="search" class="nav-item">
-          <a class="nav-link" href="search">
-            <i class="fas fa-fw fa-table"></i>
-            <span>Search</span>
-          </a>
-          
+ 
           <li id="account-management" class="nav-item">
             <a class="nav-link" href="account-management">
               <i class="fas fa-fw fa-user"></i>

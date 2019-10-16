@@ -44,6 +44,7 @@ class EventController extends Controller
             {
                 $events = Event::whereIn('status', [
                     Config::get('constants.event_status.osa_approval'),
+                    Config::get('constants.event_status.cleared'),
                     Config::get('constants.event_status.archived'),
                 ])->get();
             }
@@ -71,6 +72,35 @@ class EventController extends Controller
         $speakers = Speaker::all();
         
         return response()->json($speakers);
+    }
+
+
+    public  function getPostEventReports() {
+        if(auth()->user()->role_id == 3)
+            {
+                $events = Event::whereIn('status', [
+                    Config::get('constants.event_status.osa_approval'),
+                    Config::get('constants.event_status.cleared'),
+                    Config::get('constants.event_status.archived'),
+                    Config::get('constants.event_status.osa_rejection')
+                ])->with('organization','organization.user')->get();
+            }
+            else if(auth()->user()->role_id == 1)
+            {
+                $events = Event::where('organization_id', auth()->user()->id)->get();
+            }
+            else if(auth()->user()->role_id == 2) {
+                $events = Event::whereIn('status', [
+                    Config::get('constants.event_status.socc_approval'),
+                    Config::get('constants.event_status.osa_approval'),
+                    Config::get('constants.event_status.socc_rejection'),
+                    Config::get('constants.event_status.osa_rejection'),
+                    Config::get('constants.event_status.cleared')
+                ])->get();
+            }
+
+            print_r(json_encode($events));
+
     }
 
 
@@ -252,8 +282,9 @@ class EventController extends Controller
         }
     }
 
-    public function approve(Request $request, $id)
+    public function approve(Request $request)
     {
+        $id = $request->id;
         $user = static::getCurrentUser();
         $event = Event::find($id);
 
@@ -264,6 +295,7 @@ class EventController extends Controller
                 if(!in_array($event->status, [Config::get('constants.event_status.socc_approval'), Config::get('constants.event_status.osa_rejection')]))
                 {
                     return response()->json([
+                        'success' => false,
                         'error' => 'Error. That event has already been approved or is not yet ready for approval'
                     ]);
                 }
@@ -271,8 +303,10 @@ class EventController extends Controller
                 {
                     $event->socc_id = $user->id;
                     $event->status = Config::get('constants.event_status.osa_approval');
+                    $event->notes = $request->notes;
                     $event->save();
                     return response()->json([
+                        'success' => true,
                         'event' => $event
                     ]);
                 }
@@ -282,6 +316,7 @@ class EventController extends Controller
                 if($event->status != Config::get('constants.event_status.osa_approval'))
                 {
                     return response()->json([
+                        'success' => false,
                         'error' => 'Error. That event has already been approved or is not yet ready for approval'
                     ]);
                 }
@@ -291,6 +326,7 @@ class EventController extends Controller
                     $event->status = Config::get('constants.event_status.cleared');
                     $event->save();
                     return response()->json([
+                        'success' => true,
                         'event' => $event
                     ]);
                 }
@@ -300,13 +336,15 @@ class EventController extends Controller
         else 
         {
             return response()->json([
+                'success' => false,
                 'error' => 'Event not found'
             ]);
         }
     }
 
-    public function reject(Request $request, $id)
+    public function reject(Request $request)
     {
+        $id = $request->id;
         $user = static::getCurrentUser();
         $event = Event::find($id);
 
@@ -317,6 +355,7 @@ class EventController extends Controller
                 if(!in_array($event->status, [Config::get('constants.event_status.socc_approval'), Config::get('constants.event_status.osa_rejection')]))
                 {
                     return response()->json([
+                        'success' => false,
                         'error' => 'That event has already been rejected or is not yet ready for rejection'
                     ]);
                 }
@@ -327,6 +366,7 @@ class EventController extends Controller
                     $event->notes = $request->input('notes');
                     $event->save();
                     return response()->json([
+                        'success' => true,
                         'event' => $event
                     ]);
                 }
@@ -336,6 +376,7 @@ class EventController extends Controller
                 if($event->status != Config::get('constants.event_status.osa_approval'))
                 {
                     return response()->json([
+                        'success' => false,
                         'error' => 'That event has already been rejected or is not yet ready for rejection'
                     ]);
                 }
@@ -346,6 +387,7 @@ class EventController extends Controller
                     $event->notes = $request->input('notes');
                     $event->save();
                     return response()->json([
+                        'success' => true,
                         'event' => $event
                     ]);
                 }
@@ -355,6 +397,7 @@ class EventController extends Controller
         else 
         {
             return response()->json([
+                'success' => false,
                 'error' => 'Event not found'
             ]);
         }

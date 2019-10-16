@@ -56,14 +56,14 @@
               </div>
             </div>
             <input type="hidden" id="token" name="_token" value="{{csrf_token()}}">
-            <div class="form-group">
+            <!-- <div class="form-group">
               <div class="checkbox">
                 <label>
                   <input type="checkbox" value="remember_me" name="remember_me">
                   Remember me
                 </label>
               </div>
-            </div>
+            </div> -->
 <!--           <div class="text-right my-3">
             <a class="forgot-password" href="forgot-password.php">Forgot Password?</a>
           </div> -->

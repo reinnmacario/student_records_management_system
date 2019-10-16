@@ -167,13 +167,24 @@
           render: function ( data, type, row ) { 
             var status_name = "";
             if (data.status == 1) {
-              status_name = "Processing";
-            } 
+                status_name = "<span class='badge badge-primary'>Processing</span>";
+              } 
             else  if (data.status == 2) {
-              status_name = "For Completion";
+              status_name = "<span class='badge badge-warning'>Submitted to SOCC</span>";
             }
             else if (data.status == 3) {
-              status_name = "Completed";
+              status_name = "<span class='badge badge-warning'>Endorsed to OSA</span>";
+            }
+
+            else if (data.status == 4) {
+              status_name = "<span class='badge badge-danger'>Rejected by SOCC</span>";
+            }
+
+            else if (data.status == 5) {
+              status_name = "<span class='badge badge-danger'>Rejected by OSA</span>";
+            }
+            else if (data.status == 7) {
+              status_name = "<span class='badge badge-success'>OSA Approved</span>";
             }
             return status_name;
             // return "<span class="badge badge-primary">Primary</span>";
