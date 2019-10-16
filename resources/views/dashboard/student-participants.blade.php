@@ -97,7 +97,11 @@
                         </div>
                         <div class="form-group">
                             <label>Involvement</label>
-                            <input type="text" class="form-control" name="involvement">
+                            <select type="select" id="select-involvement" class="form-control" name="involvement" required>
+                              <option value="" selected disabled>Select Involvement</option>
+                              <option value="Participant">Participant</option>
+                              <option value="Organizer">Organizer</option>
+                            </select>
                         </div>
                         <div class="form-group text-right mt-4">
                           <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>

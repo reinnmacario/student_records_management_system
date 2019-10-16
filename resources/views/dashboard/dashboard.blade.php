@@ -30,7 +30,9 @@
               Dashboard</div>
             <div class="card-body">
 
+              @if(auth()->user()->role_id == 1)
               <button type="button" id="btn-add-project" class="btn btn-primary">Add Project</button>
+              @endif
               <div class="table-responsive mt-3">
                 <table class="table table-bordered dt-responsive" id="table-projects" width="100%" cellspacing="0">
                   <thead>
@@ -88,31 +90,24 @@
                         <div class="form-row">
                           <div class="col-md-6">
                             <label>eReserve No.</label>
-                            <input type="text" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="ereserve_id" required>
-                          </div>
-                        </div>
-                        <div class="form-row">
-                          <div class="col-md-6">
-                            <label>Event name</label>
-                            <input type="text" class="form-control" name="name">
+                            <input type="text" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="ereserve_id" maxlength="10" required>
                           </div>
                           <div class="col-md-6">
                             <label>Start of Event Date</label>
                             <input type="date" class="form-control" id="date_start" name="date_start" required>
                           </div>
                         </div>
-                       
                         <div class="form-group">
-                          <div class="form-row">
-                            <div class="col-md-6">
+                            <label>Event name</label>
+                            <input type="text" class="form-control" name="name">
+                        </div>        
+                        <div class="form-group">
                               <label>Academic Year</label>
-                              <input type="text" class="form-control" id="academic_year" name="academic_year">
-                            </div>
-                           <!--  <div class="col-md-6">
-                              <label>Semester</label>
-                              <input type="text" class="form-control" id="semester" name="semester">
-                            </div> -->
-                          </div>
+                              <select type="select" id="select-academic-year" class="form-control" name="academic_year" required>
+                              <option value="" selected disabled>Select Academic Year</option>
+                              <option value="2018-2019">2018-2019</option>
+                              <option value="2017-2018">2017-2018</option>
+                            </select>
                         </div>
                         <div class="form-group">
                           <label>Event Description</label>

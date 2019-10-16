@@ -17,6 +17,12 @@
             <i class="fas fa-fw fa-table"></i>
             <span>Search</span>
           </a>
+          
+          <li id="account-management" class="nav-item">
+            <a class="nav-link" href="account-management">
+              <i class="fas fa-fw fa-user"></i>
+              <span>Account Management</span></a>
+          </li>
         </li>
         @endif
 
@@ -63,11 +69,7 @@
             <a id="" class="dropdown-item" href="">Item 2</a>
           </div>
         </li> -->
-        <li id="account-management" class="nav-item">
-          <a class="nav-link" href="account-management">
-            <i class="fas fa-fw fa-user"></i>
-            <span>Account Management</span></a>
-        </li>
+        
   <!--       <li id="reports" class="nav-item">
           <a class="nav-link" href="reports.php">
             <i class="fas fa-fw fa-chart-area"></i>
