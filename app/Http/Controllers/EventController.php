@@ -31,7 +31,10 @@ class EventController extends Controller
         {
             $events = Event::whereIn('status', [
                 Config::get('constants.event_status.socc_approval'),
-                Config::get('constants.event_status.osa_rejection'),
+                    Config::get('constants.event_status.osa_approval'),
+                    Config::get('constants.event_status.socc_rejection'),
+                    Config::get('constants.event_status.osa_rejection'),
+                    Config::get('constants.event_status.cleared')
             ])->get();
         }
         elseif($user->role_id == 3)
