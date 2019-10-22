@@ -1,5 +1,5 @@
 
-<nav class="navbar navbar-expand navbar-dark bg-dark static-top">
+<nav class="navbar navbar-expand navbar-dark navbar-dashboard bg-dark static-top">
 
       <a class="navbar-brand mr-1" href="dashboard.php">Student Record Management System</a>
 

@@ -14,17 +14,17 @@
                 <div class="text-center">
                     <div class="row">
                         <div class="col-md-12">
-                            <h1>University of Santo Tomas</h1>
+                            <h3><b>University of Santo Tomas</b></h3>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <h3>Office for Student Affairs</h3>
+                            <h5>Office for Student Affairs</h5>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <h4>Espana Boulevard, Sampaloc, Manila, 1008 Metro Manila</h4>
+                            <h6>Espana Boulevard, Sampaloc, Manila, 1008 Metro Manila</h6>
                         </div>
                     </div>
                 </div>
@@ -48,7 +48,7 @@
                 <section id="certificationText" class="mt-5">
                     <div class="row">
                         <div class="col-md-12">
-                            <h1 class="text-uppercase text-center">Certification</h1>
+                            <h3 class="text-uppercase text-center">Certification</h3>
                         </div>
                     </div>
                     <div class="row">
@@ -82,7 +82,7 @@
                                     <tr>
                                         <td><b>Description</b></td>
                                         <td colspan="3">
-                                            {{ $event->description }}
+                                            {{ $event->semester }}
                                         </td>
                                     </tr>
                                 </table>
@@ -91,7 +91,7 @@
                     @endforeach
                 </section>
 
-                <section id="eventCount" >
+                <section id="eventCount" class="mt-3">
                     <div class="row">
                         <div class="col-md-6">
                             <p>Total number of attended activities: {{ count($student->events) }}</p>
@@ -99,18 +99,29 @@
                     </div>
                 </section>
 
-                <section id="seal">
-                    <div class="row text-right">
+                <section id="seal" class="mt-3">
+                    <div class="row text-right mb-4">
                         <div class="col-md-12">
-                            <h4>{{ $osa->user->first_name }} {{ $osa->user->last_name }}</h4>
-                            <p>Officer-in-Charge for Student Activities</p>
+                            @if(!empty($ap))
+                            <h4><b>{{ ucwords($ap->ap_name) }}</b></h4>
+                            <h5>{{ ucwords($ap->ap_position) }}</h5>
+                            @else
+                            <h4><b>Name</b></h4>
+                            <h5>Position</h5>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="row text-left mb-4">
+                        <div class="col-md-12">
+                               <small>You may contact the Office for Student Affairs, University of Santo Tomas to verify the authenticity of this certification by providing the control number at the end of this certificate.</small>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            Rm. 212 UST Tan Yan Kee Student Center <br/>
+                            <small>Rm. 212 UST Tan Yan Kee Student Center <br/>
                             University of Santo Tomas, Espana Boulevard <br/>
-                            Manila, 1015 PHILIPPINES <br/>
+                            Manila, 1015 PHILIPPINES <br/></small>
                         </div>
                     </div>
                 </section>

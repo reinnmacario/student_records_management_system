@@ -52,6 +52,8 @@ Route::get('/event-speakers', function () {
     return view('dashboard.event-speaker');
 });
 
+ Route::get('/administrator', 'UserController@showAdministratorPage');
+
 
 //  End
 
@@ -66,8 +68,8 @@ Route::get('password', 'Auth\RegisterController@generatePassword');
 
 
 Route::get('user/get-new-password', 'UserController@generateNewPassword');
-Route::delete('user/delete/{id}', 'UserController@destroy');
-
+Route::post('user/update-status', 'UserController@updateStatus');
+Route::post('user/update-ap-info', 'UserController@updateApInfo');
 
 Route::get('logout', 'Auth\LoginController@logout');
 Route::middleware('auth:api')->get('/user', function (Request $request) {

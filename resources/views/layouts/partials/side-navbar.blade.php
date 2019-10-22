@@ -1,4 +1,4 @@
-<ul class="sidebar navbar-nav">
+<ul class="sidebar sidebar-dashboard navbar-nav">
         <li id="dashboard" class="nav-item">
           <a class="nav-link" href="dashboard">
             <i class="fas fa-fw fa-tachometer-alt"></i>
@@ -8,17 +8,25 @@
         <li id="post-event-reports" class="nav-item">
           <a class="nav-link" href="post-event-reports">
             <i class="fas fa-fw fa-folder"></i>
-            <span>Post-event Reports</span>
+            <span>Projects</span>
           </a>
         </li>
         @if(auth()->user()->role_id == 3)
  
-          <li id="account-management" class="nav-item">
+        <li id="account-management" class="nav-item">
             <a class="nav-link" href="account-management">
               <i class="fas fa-fw fa-user"></i>
               <span>Account Management</span></a>
           </li>
         </li>
+
+        <li id="administrator" class="nav-item">
+            <a class="nav-link" href="administrator">
+              <i class="fas fa-fw fa-user"></i>
+              <span>Administrator</span></a>
+          </li>
+        </li>
+
         @endif
 
         @if(auth()->user()->role_id == 1)

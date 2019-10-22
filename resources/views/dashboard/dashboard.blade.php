@@ -39,7 +39,7 @@
                     <tr>
                       <th class="hidden">ID</th>
                       <th>eReserve No.</th>
-                      <th>Event Name</th>
+                      <th>Event Title</th>
                       <th>Academic Year</th>
 <!--                       <th>Semester</th> -->
                       <th>Date Submitted</th>
@@ -50,7 +50,7 @@
                     <tr>
                       <th class="hidden">ID</th>
                       <th>eReserve No.</th>
-                      <th>Event Name</th>
+                      <th>Event Title</th>
                       <th>Academic Year</th>
 <!--                       <th>Semester</th> -->
                       <th>Date Submitted</th>
@@ -98,7 +98,7 @@
                           </div>
                         </div>
                         <div class="form-group">
-                            <label>Event name</label>
+                            <label>Event Title</label>
                             <input type="text" class="form-control" name="name">
                         </div>        
                         <div class="form-group">
@@ -110,16 +110,28 @@
                             </select>
                         </div>
                         <div class="form-group">
-                          <label>Event Description</label>
-                          <textarea class="form-control" name="description"></textarea>
+                              <label>Semester</label>
+                              <select type="select" id="select-semester" class="form-control" name="semester" required>
+                              <option value="" selected disabled>Select Semester</option>
+                              <option value="1st Semester">1st Semester</option>
+                              <option value="2nd Semester">2nd Semester</option>
+                            </select>
                         </div>
                         <div class="form-group">
-                          <label>Speaker Name</label>
-                          <input type="text" class="form-control" id="speaker_name" name="speaker_name">
+                              <label>Event Classification</label>
+                              <select type="select" id="select-event-classification" class="form-control" name="classification" required>
+                              <option value="" selected disabled>Select Event Classification</option>
+                              <option value="Seminar">Seminar</option>
+                              <option value="Workshop">Workshop</option>
+                            </select>
                         </div>
                         <div class="form-group">
-                          <label>Speaker Affiliation</label>
-                          <textarea class="form-control" name="classification"></textarea>
+                              <label>Academic Year</label>
+                              <select type="select" id="select-academic-year" class="form-control" name="academic_year" required>
+                              <option value="" selected disabled>Select Academic Year</option>
+                              <option value="2018-2019">2018-2019</option>
+                              <option value="2017-2018">2017-2018</option>
+                            </select>
                         </div>
                         <div class="form-group text-right mt-4">
                           <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>

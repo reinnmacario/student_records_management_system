@@ -20,30 +20,59 @@
     <!-- Custom styles for this template-->
     <link href="{{ asset('css/sb-admin.css') }}" rel="stylesheet">
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/buttons.css') }}" rel="stylesheet">
 
     <style>
-      .logo{
-        text-align: center;
-        height: auto;
-        margin-bottom: 10px;
-        width: 80px;
+      .login-logo {
+        height: 90px;
+      }
+
+      .login-topnav {
+        box-shadow: 0 4px 2px -2px gray;
       }
       .form-title h3{
         font-size: 30px;
         font-weight: bold;
       }
+
+      .login-wrapper {
+        background: url('{{asset("img/login-bg.png")}}');
+        height: 100vh;
+        width: 100%;
+        background-size: 100%;
+      }
+
+      .card-login {
+        background-color: black;
+        color: white;
+        margin-top: 50px;
+      }
+
+      .footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 50px; /* Set the fixed height of the footer here */
+        line-height: 50px; /* Vertically center the text there */
+        box-shadow: 0 -4px 2px -2px gray;
+        background-color: white;
+      }
+      .footer-copyright{
+        color: black;
+      }
+
     </style>
   </head>
-  <body class="bg-dark">
-
+  <body class="login-wrapper">
+    <div class="container-fluid bg-white login-topnav">
+      <img class="login-logo" src="{{asset('img/login-logo.png')}}">
+    </div>
     <div class="container">
-      <div class="card card-login mx-auto mt-5">
+        <div class="card card-login">
         <div class="card-body">
           <form id="form-login" method="post" action="/login">
-            <div class="text-center">
-               <div class="form-title"><h3>Student Record Management System</h3></div>
-            </div>
-            <div class="form-group">
+            <div class="form-title"><h4>Login</h4></div>
+            <div class="form-group mt-3">
               <div class="form-label-group">
                 <input type="text" id="username" name="email" class="form-control" placeholder="Username" required="required" autofocus="autofocus">
                 <label for="username">Username</label>
@@ -72,6 +101,15 @@
         </div>
       </div>
     </div>
+
+  <footer class="footer">
+      <div class="container text-center">
+        <span class="footer-copyright">Copyright</span>
+      </div>
+    </footer>
+
+  </body>
+  </html>
 
     <!-- Bootstrap core JavaScript-->
     <script src="{{ asset('js/jquery.min.js') }}"></script>

@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="{{ asset('css/bootstrap-extend.min.css') }}">
     <!-- Custom fonts for this template-->
     <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="{{ asset('css/switch.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/buttons.css') }}">
     <script src="{{ asset('js/jquery.min.js') }}"></script>
     @yield('styles')
 

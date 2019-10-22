@@ -138,7 +138,7 @@ class EventController extends Controller
         $event->status = 1; 
         $event->ereserve_id = $request->input('ereserve_id');
         $event->read_status = 0;
-        $event->description = $request->input('description');
+        $event->semester = $request->input('semester');
         $event->classification = $request->input('classification');
         $event->organization_id = $user->id;
         $event->save();

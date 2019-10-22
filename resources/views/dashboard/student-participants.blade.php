@@ -36,7 +36,7 @@
                   <thead>
                     <tr>
                       <th class="hidden">ID</th>
-                      <th>Event Name</th>
+                      <th>Event Title</th>
                       <th>Student Name</th>
                       <th>Involvement</th>
                       <th>Date Created</th>
@@ -46,7 +46,7 @@
                   <tfoot>
                     <tr>
                       <th class="hidden">ID</th>
-                      <th>Event Name</th>
+                      <th>Event Title</th>
                       <th>Student Name</th>
                       <th>Involvement</th>
                       <th>Date Created</th>
@@ -187,7 +187,7 @@
           render: function ( data, type, row ) { 
             var html = "";
             //html += '<button type="button" class="btn btn-primary">Edit</button> ';
-            html += '<button type="button" class="btn btn-danger btn-delete">Delete</button>';
+            html += '<button type="button" class="btn btn-danger btn-delete">Remove</button>';
             return html;
           } 
         }

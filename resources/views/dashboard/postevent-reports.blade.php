@@ -214,7 +214,8 @@
       $(document).on('click', '.btn-export', function() {
         var orgid = $(this).attr('data-orgid');
         var email = $(this).attr('data-email');
-        var win = window.open('students/'+orgid+'/generate-report?mail=true&recipient='+email, '_blank');
+        // var win = window.open('students/'+orgid+'/generate-report?mail=true&recipient='+email, '_blank');
+        var win = window.open('students/'+orgid+'/generate-report?export=true', '_blank');
       });
 
 

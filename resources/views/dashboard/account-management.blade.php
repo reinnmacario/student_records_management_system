@@ -200,13 +200,22 @@
         { data: 'created_at'},
         { data: null,
           render: function ( data, type, row ) {
+            var html = "";
+            if (data.status == 1) {
+              html += '<span class="switch switch-sm"> <input type="checkbox" class="switch btn-change-status" id="'+data.id+'" data-id="'+data.id+'" data-status="'+data.status+'" checked> <label for="'+data.id+'"></label></span>';
+            } else {
+              html += '<span class="switch switch-sm"> <input type="checkbox" class="switch btn-change-status" id="'+data.id+'" data-id="'+data.id+'" data-status="'+data.status+'"> <label for="'+data.id+'"></label></span>';
+            }
             // <button type='button' class='btn btn-primary btn-sm btn-edit' data-id='"+data.id+"' data-account='"+data.id+"'>Edit</button> 
-            return "<button class='btn btn-danger btn-sm btn-delete' data-id='"+data.id+"' data-account='"+data.id+"'>Delete</button>";
+            // html += "<button class='btn btn-danger btn-sm btn-delete' data-id='"+data.id+"' data-account='"+data.id+"'>Remove</button>";
+
+            return html;
           } 
-        }
+        },
         ],
         columnDefs: [
         { className: "hidden", "targets": [0]},
+         { "orderable": false, "targets": 7 }
         ]
     });
 
@@ -254,26 +263,42 @@
             return false;
     });
 
-    $(document).on('click', '.btn-delete', function() {
-      var confirm_alert = confirm("Are you sure you want to delete this account?");
-      if (confirm_alert == true) {
-       var id  = $(this).attr('data-id');
-       $.ajax({
-            url: "/user/delete/"+id,
-            type: "DELETE",
-            data: {
-              _token: "{{csrf_token()}}"
-            },
-            success: function(data) {
-              if (data.user) {
-                alert("Account Successfully Deleted!");
-                location.reload();
+    var chk;
+    $(document).on('change', '.btn-change-status', function(e) {
+      e.preventDefault();
+      chk = $(this);
+      var switch_status = $(this).attr('data-status');
+      var account_status = (switch_status == 1) ? 0 : 1;
+      var id  = $(this).attr('data-id');
+      var confirm_alert = (switch_status == 1) ? confirm("Are you sure you want to deactivate this account?") : confirm("Are you sure you want to activate this account?");
+        if (confirm_alert == true) {
+         $.ajax({
+              url: "/user/update-status",
+              type: "POST",
+              data: {
+                _token: "{{csrf_token()}}",
+                id: id,
+                status: account_status
+              },
+              success: function(data) {
+                if (data.success === true) {
+                  alert("Account Successfully Updated!");
+                  location.reload();
+                }
               }
-            }
 
-          });
-      }
+            });
+        }
+        else {
+          if(chk.checked) {
+            chk.prop("checked", false);
+          }
+          else {
+            chk.prop("checked", true);
+          }
+        }
     });
+
 
 
   });

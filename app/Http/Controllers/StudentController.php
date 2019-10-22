@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\StudentEventReportMail;
 use App\OSA;
 use App\Student;
+use App\AuthorizedPersonnel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -246,37 +247,45 @@ class StudentController extends Controller
             ->first();
         $osa = static::getCurrentUser()->osa;
 
-        $context = [
+        $check_ap = AuthorizedPersonnel::all();
+        if(count($check_ap) > 0) {
+            $ap = AuthorizedPersonnel::find(1);
+        }
+        else {
+            $ap = array();
+        }          
+            $context = [
             'student' => $student,
             'osa' => $osa,
+            'ap' => $ap,
         ];
         /* return $context; */
 
         /* return view('student.student-event-report')->with($context); */
         if($student)
         {
-            if($request->input('mail') == true)
+            if($request->input('export') == true)
             {
-                if($request->input('recipient'))
-                {
-                    $recipient = $request->input('recipient');
+                // if($request->input('recipient'))
+                // {
+                    //$recipient = $request->input('recipient');
                     $pdf = PDF::loadView('student.student-event-report', $context);
-                    SendEventEmail::dispatch($student, $osa, $recipient);
+                    //SendEventEmail::dispatch($student, $osa, $recipient);
                     /* Mail::to($request->input('recipient'))->send(new StudentEventReportMail($student, $pdf, $osa)); */
                     return $pdf->download(strtoupper($student->last_name) . ", " . strtoupper($student->first_name) . " " . Carbon::now()->toDateString() . ".pdf");
-                }
-                else 
-                {
-                    return response()->json([
-                        'error' => "The send mail action was specified without a entering a recipient email address"
-                    ]);
-                }
+                // }
+                // else 
+                // {
+                //     return response()->json([
+                //         'error' => "The send mail action was specified without a entering a recipient email address"
+                //     ]);
+                // }
             }
-            return response()->json([
-                'student' => $student,
-                'send_email' => $request->input('mail'),
-                'recipient' => $request->input('recipient'),
-            ]);
+            // return response()->json([
+            //     'student' => $student,
+            //     'send_email' => $request->input('mail'),
+            //     'recipient' => $request->input('recipient'),
+            // ]);
         }
         else 
         {

@@ -1,0 +1,14 @@
+.btn-primary{
+	background-color: #e8c61e;
+	border-color: unset;
+}
+
+.btn-primary:hover{
+	border-color: unset;
+	background-color: #dab914;
+}
+
+.btn-primary:active {
+	border-color: unset!important;
+	background-color: #dab914!important;
+}

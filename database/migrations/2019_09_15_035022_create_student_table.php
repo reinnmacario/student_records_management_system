@@ -18,6 +18,8 @@ class CreateStudentTable extends Migration
             $table->unsignedBigInteger('student_id')->unique();
             $table->string('first_name');
             $table->string('last_name');
+            $table->string('college', 200);
+            $table->string('course', 255);
             $table->string('middle_initial')->nullable();
             $table->timestamps();
 

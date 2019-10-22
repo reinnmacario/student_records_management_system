@@ -1,12 +1,11 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use App\User;
 use App\Organization;
 use App\SOCC;
 use App\OSA;
 use App\Role;
+use App\AuthorizedPersonnel;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -24,6 +23,10 @@ class UserController extends Controller
 
         if (Auth::attempt(['email' => $email, 'password' => $password])) {
             $user = User::where('email', $request->input('email'))->first();
+
+            if ($user->status == 0) {
+                return response()->json(['error' => 'Account is deactivated. Please go to System Administrator.', 'success' => false]);
+            }
             session(['user_id' => $user->id, 'role_id' => $user->role_id, 'first_name' => $user->first_name, 'last_name' => $user->last_name]);
 
             $role_instance = static::getUserRoleInstance($user);
@@ -219,7 +222,7 @@ class UserController extends Controller
 
     public function getAllUsers()
     {
-        $users = User::with('role')->get();
+        $users = User::with('role')->where('id', '!=', auth()->user()->id)->get();
         return response()->json($users);
     }
 
@@ -246,32 +249,26 @@ class UserController extends Controller
         return view('dashboard.dashboard');
     }
 
+    public function showAdministratorPage() {   
+        $check_ap = AuthorizedPersonnel::all();
+        if(count($check_ap) > 0) {
+            $ap = AuthorizedPersonnel::find(1);
+        }
+        else {
+            $ap = array();
+        }  
+
+            return view('dashboard.administrator', compact('ap'));
+    }
+
+    
+
+
     public function getArchivedUsers() {
         return response()->json([
             'users' => User::onlyTrashed()->get()
         ]);
     }
-
-    // public function changePassword(ChangePassword $request) 
-    // {
-    //     $user = static::getCurrentUser();
-
-    //     if(Hash::check($request->input('password'), $user->password))
-    //     {
-    //         return response()->json([
-    //             'error' => 'New password cannot be the same as the old password'
-    //         ]);
-    //     }
-    //     else 
-    //     {
-    //         $user->password = Hash::make($request->input('password'));
-    //         $user->save();
-    //         return response()->json([
-    //             'user' => $user,
-    //             'message' => 'Password updated'
-    //         ]);
-    //     }
-    // }
 
     public function UpdatePassword(Request $request)
     {
@@ -343,6 +340,27 @@ class UserController extends Controller
             'count' => $activated_user_count
         ]);
     }
+
+
+    public function updateStatus(Request $request) {
+        $user = User::find($request->id);
+        $user->status = (int) $request->status;
+        if($user->save()){
+            return response()->json(["success" => true]);
+        }
+    }
+
+    public function updateApInfo(Request $request) {
+        $ap = AuthorizedPersonnel::firstOrNew(['id' => 1]);
+        $ap->ap_name = $request->ap_name;
+        $ap->ap_position = $request->ap_position;
+        if($ap->save()){
+            return response()->json(["success" => true]);
+        }
+    }
+
+
+    
 
 
     // Helper Functions

@@ -11,6 +11,8 @@ $factory->define(Student::class, function (Faker $faker) {
         'student_id' => $faker->unique()->randomNumber(9),
         'first_name' => $faker->firstName,
         'last_name' => $faker->lastName,
-        'middle_initial' => strtoupper($faker->randomLetter)
+        'middle_initial' => strtoupper($faker->randomLetter),
+        'course' => "",
+        'college' => ""
     ];
 });

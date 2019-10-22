@@ -15,6 +15,7 @@ $factory->define(Event::class, function (Faker $faker) {
         'description' => implode($faker->sentences()),
         'ereserve_id' => $faker->randomNumber(6),
         'academic_year' => $faker->numberBetween(2015, 2019),
+        'semester' => "2nd Semester",
         'classification' => $classification[array_rand($classification)],
         'status' => Config::get('constants.event_status.draft'),
         'read_status' => Config::get('constants.read_status.unread'),

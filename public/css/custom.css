@@ -9,6 +9,21 @@
 .input-error {
 	border: 1px solid red;
 }
+
+.navbar-dashboard {
+	background-color: #FFEE58!important;
+	
+}
+
+.sidebar-dashboard {
+	background-color: #000000!important;
+}
+
+.navbar-dashboard a, .navbar-dashboard i {
+	color: black!important;
+}
+
+
 @font-face {
     src: url('../../assets/fonts/PinyonScript-Regular.ttf');
      font-family: "pinyon";
