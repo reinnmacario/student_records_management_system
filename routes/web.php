@@ -54,6 +54,10 @@ Route::get('/event-speakers', function () {
  Route::get('/administrator', 'UserController@showAdministratorPage');
 
 
+ Route::get('/search', 'UserController@showSearchPage');
+
+
+
 //  End
 
 
@@ -120,7 +124,7 @@ Route::post('logout', 'UserController@authenticate');
         Route::get('get-all-event-speakers', 'EventController@getAllEventSpeakers');
         Route::post('get-all-speakers', 'EventController@getAllSpeakers');
 
-        Route::delete('speaker', 'EventController@deleteEventSpeaker');
+        Route::delete('speaker/delete', 'EventController@deleteEventSpeaker');
 
         Route::get('show/{$id}', 'EventController@show');
         Route::get('/search', 'EventController@search');

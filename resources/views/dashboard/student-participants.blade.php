@@ -138,9 +138,7 @@
               $('#select-event').html(html);
             }
           });
-
   }
-
 
   function getAllStudents() {
     $.ajax({
@@ -154,7 +152,6 @@
               $('#select-student').html(html);
             }
           });
-
   }
 
   var participants;

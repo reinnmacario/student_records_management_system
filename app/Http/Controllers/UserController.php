@@ -249,6 +249,11 @@ class UserController extends Controller
         return view('dashboard.dashboard');
     }
 
+    public function showSearchPage() {   
+        return view('dashboard.search');
+    }
+
+
     public function showAdministratorPage() {   
         $check_ap = AuthorizedPersonnel::all();
         if(count($check_ap) > 0) {

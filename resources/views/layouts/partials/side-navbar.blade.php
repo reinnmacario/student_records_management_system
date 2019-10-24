@@ -12,7 +12,15 @@
           </a>
         </li>
         @if(auth()->user()->role_id == 3)
- 
+  
+
+        <li id="search" class="nav-item">
+            <a class="nav-link" href="search">
+              <i class="fas fa-fw fa-user"></i>
+              <span>Search</span></a>
+          </li>
+        </li>
+
         <li id="account-management" class="nav-item">
             <a class="nav-link" href="account-management">
               <i class="fas fa-fw fa-user"></i>
@@ -44,7 +52,7 @@
           </a>
         </li>
 
-        <li id="student-participants" class="nav-item">
+<!--         <li id="student-participants" class="nav-item">
           <a class="nav-link" href="student-participants">
             <i class="fas fa-fw fa-user"></i>
             <span>Student Participants</span>
@@ -56,8 +64,7 @@
             <i class="fas fa-fw fa-user"></i>
             <span>Event Speakers</span>
           </a>
-        </li>
-        
+        </li> -->
         
         @endif
 

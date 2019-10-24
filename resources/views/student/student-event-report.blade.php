@@ -9,7 +9,6 @@
     </head>
     <body>
         <div class="container">
-
             <header>
                 <div class="text-center">
                     <div class="row">
@@ -68,23 +67,25 @@
                             <div class="col-md-12">
                                 <table class="table table-bordered">
                                     <tr>
-                                        <td><b>Academic Year</b></td>
-                                        <td><b>Event Name</b></td>
-                                        <td><b>Organized By</b></td>
-                                        <td><b>Involvement</b></td>
+                                        <th width="10%" style="font-size: 11px;background-color: #FFEE58;"><b>Academic Year</b></th>
+                                        <th width="10%" style="font-size: 11px;background-color: #FFEE58;"><b>Semester</b></th>
+                                        <th width="35%" style="font-size: 11px;background-color: #FFEE58;"><b>Event Name</b></th>
+                                        <th width="25%" style="font-size: 11px;background-color: #FFEE58;"><b>Organized By</b></th>
+                                        <th width="10%" style="font-size: 11px;background-color: #FFEE58;"><b>Involvement</b></th>
                                     </tr>
                                     <tr>
-                                        <td>{{ $event->date_start }}</td>
-                                        <td>{{ $event->name }}</td>
-                                        <td>{{ $event->organization->name }}</td>
-                                        <td>{{ $event->pivot->involvement }}</td>
+                                        <td style="font-size: 10px;">{{ $event->date_start }}</td>
+                                        <td style="font-size: 10px;">{{ $event->semester}}</td>
+                                        <td style="font-size: 10px;">{{ $event->name }}</td>
+                                        <td style="font-size: 10px;">{{ $event->organization->name }}</td>
+                                        <td style="font-size: 10px;">{{ $event->pivot->involvement }}</td>
                                     </tr>
-                                    <tr>
+                                    <!-- <tr>
                                         <td><b>Description</b></td>
                                         <td colspan="3">
                                             {{ $event->semester }}
                                         </td>
-                                    </tr>
+                                    </tr> -->
                                 </table>
                             </div>
                         </div>

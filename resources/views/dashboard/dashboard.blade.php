@@ -30,9 +30,19 @@
               Dashboard</div>
             <div class="card-body">
 
+
               @if(auth()->user()->role_id == 1)
-              <button type="button" id="btn-add-project" class="btn btn-primary">Add Project</button>
-              @endif
+        <nav class="mt-3">
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+              <a class="nav-item nav-link active" id="nav-events-tab" data-toggle="tab" href="#nav-events" role="tab" aria-controls="nav-events" aria-selected="true">Events/Projects</a>
+              <a class="nav-item nav-link" id="nav-students-tab" data-toggle="tab" href="#nav-students" role="tab" aria-controls="nav-students" aria-selected="true">Student Participants</a>
+              <a class="nav-item nav-link" id="nav-speakers-tab" data-toggle="tab" href="#nav-speakers" role="tab" aria-controls="nav-speakers" aria-selected="false">Event Speakers</a>
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+          <div class="tab-pane fade show active" id="nav-events" role="tabpanel" aria-labelledby="nav-events-tab">
+          <button type="button" id="btn-add-project" class="btn btn-primary my-3">Add Project</button>
+            <div class="tab-events">
               <div class="table-responsive mt-3">
                 <table class="table table-bordered dt-responsive" id="table-projects" width="100%" cellspacing="0">
                   <thead>
@@ -61,6 +71,97 @@
                   </tbody>
                 </table>
               </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="nav-students" role="tabpanel" aria-labelledby="nav-students-tab">
+              <button type="button" id="btn-add-participant" class="btn btn-primary my-3">Add Event Participant</button>
+              <div class="table-responsive mt-3">
+                <table class="table table-bordered dt-responsive" id="table-participants" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th class="hidden">ID</th>
+                      <th>Event Title</th>
+                      <th>Student Name</th>
+                      <th>Involvement</th>
+                      <th>Date Created</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tfoot>
+                    <tr>
+                      <th class="hidden">ID</th>
+                      <th>Event Title</th>
+                      <th>Student Name</th>
+                      <th>Involvement</th>
+                      <th>Date Created</th>
+                      <th>Actions</th>
+                    </tr>
+                  </tfoot>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+          </div>
+          <div class="tab-pane fade" id="nav-speakers" role="tabpanel" aria-labelledby="nav-speakers-tab">
+
+            <button type="button" id="btn-add-speaker" class="btn btn-primary my-3">Add Event Speaker</button>
+              <div class="table-responsive mt-3">
+                <table class="table table-bordered dt-responsive" id="table-speakers" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th class="hidden">ID</th>
+                      <th>Event Name</th>
+                      <th>Speaker Name</th>
+                      <th>Date Created</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tfoot>
+                    <tr>
+                      <th class="hidden">ID</th>
+                      <th>Event Name</th>
+                      <th>Speaker Name</th>
+                      <th>Date Created</th>
+                      <th>Actions</th>
+                    </tr>
+                  </tfoot>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+
+          </div>
+        </div>
+              @else
+              <div class="table-responsive mt-3">
+                <table class="table table-bordered dt-responsive" id="table-projects" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th class="hidden">ID</th>
+                      <th>eReserve No.</th>
+                      <th>Event Title</th>
+                      <th>Academic Year</th>
+<!--                       <th>Semester</th> -->
+                      <th>Date Submitted</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tfoot>
+                    <tr>
+                      <th class="hidden">ID</th>
+                      <th>eReserve No.</th>
+                      <th>Event Title</th>
+                      <th>Academic Year</th>
+<!--                       <th>Semester</th> -->
+                      <th>Date Submitted</th>
+                      <th>Status</th>
+                    </tr>
+                  </tfoot>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+              @endif
             </div>
           </div>
 
@@ -142,6 +243,109 @@
       </div>
     </div>
 
+
+
+@if(auth()->user()->role_id == 1)
+   <!-- Add Participant Modal -->
+    <div class="modal fade" id="add-participant-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Add New Participant</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="tab-content" id="nav-tabContent">
+              <div class="tab-pane fade show active" id="nav-add" role="tabpanel" aria-labelledby="nav-home-tab">
+
+                <form id="form-add-participant">
+                   <input type="hidden" name="_token" value="{{csrf_token()}}">
+                  <div class="container my-2">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Event</label>
+                            <select type="select" id="select-event" class="form-control select-event" data-type="1" name="event" required>
+                              <option value="" selected disabled>Select Event</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Student</label>
+                            <select type="select" id="select-student" class="form-control select-student" name="student" required>
+                              <option value="" selected disabled>Select Student</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Involvement</label>
+                            <select type="select" id="select-involvement" class="form-control" name="involvement" required>
+                              <option value="" selected disabled>Select Involvement</option>
+                              <option value="Participant">Participant</option>
+                              <option value="Organizer">Organizer</option>
+                            </select>
+                        </div>
+                        <div class="form-group text-right mt-4">
+                          <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-success btn-add">Add</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      <!-- Event Speaker Modal -->
+    <div class="modal fade" id="add-speaker-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Add New Speaker</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="tab-content" id="nav-tabContent">
+              <div class="tab-pane fade show active" id="nav-add" role="tabpanel" aria-labelledby="nav-home-tab">
+                <form id="form-add-event-speaker">
+                  <input type="hidden" name="_token" value="{{csrf_token()}}">
+                  <div class="container my-2">
+                    <div class="row">
+                      <div class="col-md-12">
+                            <div class="form-group">
+                              <label>Event</label>
+                              <select type="select" id="select-event" class="form-control select-event" data-type="2" name="event" required>
+                                <option value="" selected disabled>Select Event</option>
+                              </select>
+                            </div>
+                            <input type="hidden" id="token" name="_token" value="{{csrf_token()}}">
+                            <div class="form-group">
+                              <label>Speaker</label>
+                              <select type="select" id="select-speaker" class="form-control select-speaker" name="speaker" required>
+                                <option value="" selected disabled>Select Speaker</option>
+                              </select>
+                          </div>
+                        <div class="form-group text-right mt-4">
+                          <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-success btn-add">Add</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+@endif
 
 @endsection
 @section('scripts')
@@ -244,6 +448,229 @@
     });
 
 
+ // Student Participants scripts
+ @if(auth()->user()->role_id == 1) 
+  function getAllEvents() {
+    $.ajax({
+            url: "events/get-all-events",
+            type: "GET",
+            success: function(data) {
+              var html = '<option value="" selected disabled>Select Event</option>';
+              $.each(data, function(x,y) {
+                  html += '<option value="'+y.id+'">'+y.name+'</option>';
+              });
+              $('.select-event').html(html);
+            }
+          });
+
+  }
+
+  function getAllStudents() {
+    $.ajax({
+            url: "students",
+            type: "GET",
+            success: function(data) {
+              var html = '<option value="" selected disabled>Select Student</option>';
+              $.each(data, function(x,y) {
+                  html += '<option value="'+y.id+'">'+y.first_name+ " "+y.middle_initial+" "+y.last_name+'</option>';
+              });
+              $('#select-student').html(html);
+            }
+          });
+  }
+
+  var participants, projects;
+  var token = "{{csrf_token()}}";
+    getAllEvents();
+    getAllStudents();
+    participants = $("#table-participants").DataTable({
+        ajax: {
+          url: "students/get-event-participants",
+          type: "GET",
+          dataSrc: "", 
+
+        },
+        responsive:true,
+        "order": [[ 4, "desc" ]],
+        columns: [
+        { data: 'id'},
+        { data: 'name' },
+        { data: null,
+            render: function ( data, type, row ) { 
+            return data.first_name+" "+data.middle_initial+" "+data.last_name;
+          } 
+         },
+        // { data: 'semester'},
+        { data: 'involvement'},
+        { data: 'created_at'},
+        { data: null,
+          render: function ( data, type, row ) { 
+            var html = "";
+            //html += '<button type="button" class="btn btn-primary">Edit</button> ';
+            html += '<button type="button" class="btn btn-danger btn-delete">Remove</button>';
+            return html;
+          } 
+        }
+        ],
+        columnDefs: [
+        { className: "hidden", "targets": [0]},
+        ]
+    });
+
+
+    $(document).on('click', '#btn-add-participant', function() {
+      $('#add-participant-modal').modal('show');
+    });
+
+    $(document).on('submit', '#form-add-participant', function() {
+       $.ajax({
+            url: "students/events/add",
+            type: "POST",
+            data: $(this).serialize(),
+            success: function(data) {
+              if (data.success === true) {
+                alert("Participant Successfully Added!");
+                location.reload();
+              }
+              else {
+                alert(data.error);
+              }
+            }
+          });
+            return false;
+    });
+
+    $(document).on('click', '.btn-delete', function() {
+      var confirm_alert = confirm("Are you sure you want to delete this participant?");
+      if (confirm_alert == true) {
+       var id  = $(this).attr('data-id');
+       $.ajax({
+            url: "participant/delete",
+            type: "DELETE",
+            data: {
+              id: id,
+              _token: "{{csrf_token()}}"
+            },
+            success: function(data) {
+              if (data.success === true) {
+                alert("Participants Successfully Deleted!");
+                location.reload();
+              }
+            }
+
+          });
+      }
+    });
+
+
+
+    // Event  Speaker Scripts
+      projects = $("#table-speakers").DataTable({
+        ajax: {
+          url: "/events/get-all-event-speakers",
+          type: "GET",
+          dataSrc: "", 
+
+        },
+        responsive:true,
+        "order": [[ 4, "desc" ]],
+        columns: [
+        { data: 'event_id'},
+        { data: 'name' },
+         { data: null,
+            render: function ( data, type, row ) { 
+            return data.first_name+" "+data.last_name;
+          } 
+         },
+        // { data: 'semester'},
+        { data: 'created_at'},
+        { data: null,
+          render: function ( data, type, row ) { 
+            var html = "";
+            //html += '<button type="button" class="btn btn-primary">Edit</button> ';
+            html += '<button type="button" class="btn btn-danger btn-delete-event-speaker" data-event="'+data.event_id+'" data-speaker="'+data.speaker_id+'">Remove</button>';
+            return html;
+          } 
+        }
+        ],
+        columnDefs: [
+        { className: "hidden", "targets": [0]},
+        ]
+    });
+
+    $(document).on('click', '#btn-add-speaker', function() {
+      $('#add-speaker-modal').modal('show');
+    });
+
+    $(document).on('change', '.select-event', function() {
+      var type = $(this).attr('data-type');
+        $.ajax({
+            url: "events/get-all-speakers",
+            type: "POST",
+            data:{
+              _token: "{{csrf_token()}}",
+              id: $(this).val()
+            },
+            success: function(data) {
+              var html = '<option value="" selected disabled>Select Speaker</option>';
+              $.each(data, function(x,y) {
+                  html += '<option value="'+y.id+'">'+y.first_name+" "+y.last_name+'</option>';
+              });
+              if(type==1) {
+                $('.select-student').html(html);
+              } 
+              else if(type==2) {
+                $('.select-speaker').html(html);
+              }
+            }
+      });
+    });
+
+    $(document).on('submit', '#form-add-event-speaker', function() {
+       $.ajax({
+            url: "events/speakers/add",
+            type: "POST",
+            data: $(this).serialize(),
+            success: function(data) {
+              if (data.success === true) {
+                alert("Event Speaker Successfully Added!");
+                location.reload();
+              }
+              else {
+                alert(data.error);
+              }
+            }
+          });
+            return false;
+    });
+
+    $(document).on('click', '.btn-delete-event-speaker', function() {
+      var confirm_alert = confirm("Are you sure you want to delete this event speaker?");
+      if (confirm_alert == true) {
+       var event_id  = $(this).attr('data-event');
+       var speaker_id  = $(this).attr('data-speaker');
+       $.ajax({
+            url: "events/speaker/delete",
+            type: "DELETE",
+            data: {
+              event_id: event_id,
+              speaker_id: speaker_id,
+              _token: "{{csrf_token()}}"
+            },
+            success: function(data) {
+              if (data.success === true) {
+                alert("Event Speaker Successfully Deleted!");
+                location.reload();
+              }
+              else {
+                alert(data.message);
+              }
+            }
+
+          });
+      }
+    });
+ @endif
   });
 </script>
 @endsection
