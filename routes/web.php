@@ -36,9 +36,8 @@ Route::get('/account-management', function () {
     return view('dashboard.account-management');
 });
 
-Route::get('/student-list', function () {
-    return view('dashboard.student-list');
-});
+Route::get('/student-list', 'StudentController@showStudentListPage');
+
 
 Route::get('/speaker-list', function () {
     return view('dashboard.speaker-list');
@@ -103,7 +102,12 @@ Route::post('logout', 'UserController@authenticate');
         Route::get('{id}', 'StudentController@show');
         Route::get('{id}/generate-report', 'StudentController@generateReport')->middleware('osa.user');
         Route::put('{id}', 'StudentController@update');
+        
+        Route::post('get-specific-info', 'StudentController@getSpecificInfo');
         Route::post('store', 'StudentController@store')->middleware('org.user');
+        Route::post('update', 'StudentController@updateStudentInfo')->middleware('org.user');
+
+        Route::post('/get-college-course', 'StudentController@getCollegeCourse');
         Route::post('/events/add', 'StudentController@assignToEvent')->middleware('org.user');
         Route::delete('{student_id}/events/{event_id}', 'StudentController@removeFromEvent')->middleware('org.user');
     });
@@ -112,6 +116,7 @@ Route::post('logout', 'UserController@authenticate');
         Route::get('get-post-event-reports', 'EventController@getPostEventReports');
         Route::get('all', 'EventController@index');
         Route::get('get-all-events', 'EventController@getAllEvents');
+        Route::post('get-specific-event', 'EventController@getSpecificEvent');
         Route::get('get-all-event-speakers', 'EventController@getAllEventSpeakers');
         Route::post('get-all-speakers', 'EventController@getAllSpeakers');
 

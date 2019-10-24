@@ -11,6 +11,8 @@ use App\Mail\StudentEventReportMail;
 use App\OSA;
 use App\Student;
 use App\AuthorizedPersonnel;
+use App\College;
+use App\CollegeCourse;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -29,6 +31,16 @@ class StudentController extends Controller
         return response()->json(
             $students
         );
+    }
+
+    public function showStudentListPage() {
+        $colleges = College::all();
+        return view('dashboard.student-list', compact('colleges'));
+    }
+
+    public function getCollegeCourse(Request $request) {
+        $course = CollegeCourse::where('college_id', $request->college_id)->get();
+        return response()->json($course);
     }
 
 
@@ -73,7 +85,9 @@ class StudentController extends Controller
                 'student_id' => $request->input('student_id'),
                 'first_name' => $request->input('first_name'),
                 'last_name' => $request->input('last_name'),
-                'middle_initial' => $request->input('middle_initial')
+                'middle_initial' => $request->input('middle_initial'),
+                'college' => $request->college,
+                'course' => $request->course
             ]);
             return response()->json([
                 'success' => true,
@@ -82,6 +96,36 @@ class StudentController extends Controller
         }
 
     }
+
+
+    public function updateStudentInfo(Request $request)
+    {
+        $student = Student::where('student_id', $request->student_id)->first();
+        if($student)
+        {
+            return response()->json([
+                'success' => false,
+                'error' => "Student with the STUDENT_ID of {$request->input('student_id')} already exists",
+            ]);
+        }
+        else 
+        {
+            $student = Student::where('id', $request->id)->update([
+                'student_id' => $request->input('student_id'),
+                'first_name' => $request->input('first_name'),
+                'last_name' => $request->input('last_name'),
+                'middle_initial' => $request->input('middle_initial'),
+                'college' => $request->college,
+                'course' => $request->course
+            ]);
+            return response()->json([
+                'success' => true,
+                'student' => $student
+            ]);
+        }
+
+    }
+
 
     /**
      * Display the specified resource.
@@ -146,6 +190,17 @@ class StudentController extends Controller
     {
         //
     }
+
+
+    public function getSpecificInfo(Request $request)
+    {
+        $student = Student::find($request->id);
+        return response()->json(
+            $student
+        );
+
+    }
+
 
     public function assignToEvent(Request $request)
     {

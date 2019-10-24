@@ -13,7 +13,9 @@ class Student extends Model
         'student_id',
         'last_name',
         'first_name',
-        'middle_initial'
+        'middle_initial',
+        'college',
+        'course'
     ];
 
     public function events()

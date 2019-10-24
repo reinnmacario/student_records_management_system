@@ -124,16 +124,7 @@
                               <option value="Seminar">Seminar</option>
                               <option value="Workshop">Workshop</option>
                             </select>
-                        </div>
-                        <div class="form-group">
-                              <label>Academic Year</label>
-                              <select type="select" id="select-academic-year" class="form-control" name="academic_year" required>
-                              <option value="" selected disabled>Select Academic Year</option>
-                              <option value="2018-2019">2018-2019</option>
-                              <option value="2017-2018">2017-2018</option>
-                            </select>
-                        </div>
-                        <div class="form-group text-right mt-4">
+                        </div>                        <div class="form-group text-right mt-4">
                           <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
                           <button type="submit" class="btn btn-success btn-add">Add</button>
                         </div>

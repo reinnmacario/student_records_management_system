@@ -24,8 +24,9 @@ class EventController extends Controller
 
         if($user->role_id == 1)
         {
+            $events = Event::where('organization_id', auth()->user()->id)->get();
             /* $events = $role_user->events()->with('speakers')->with('students')->get(); */
-            $events = $role_user->events()->get();
+            // $events = $role_user->events()->get();
         }
         elseif($user->role_id == 2)
         {
@@ -54,6 +55,11 @@ class EventController extends Controller
 
         }
         print_r(json_encode($events));
+    }
+
+    public function getSpecificEvent(Request $request) {
+        $event = Event::find($request->id);
+        return response()->json($event);
     }
 
     public function getAllEvents(){

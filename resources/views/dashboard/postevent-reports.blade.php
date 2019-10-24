@@ -37,9 +37,7 @@
                       <th>Event Name</th>
                       <th>Date Submitted</th>
                       <th>Status</th>
-                      @if(auth()->user()->role_id != 1)
                       <th>Actions</th>
-                      @endif
                     </tr>
                   </thead>
                   <tfoot>
@@ -49,9 +47,7 @@
                       <th>Event Name</th>
                       <th>Date Submitted</th>
                       <th>Status</th>
-                      @if(auth()->user()->role_id != 1)
                       <th>Actions</th>
-                      @endif
                     </tr>
                   </tfoot>
                   <tbody>
@@ -131,6 +127,66 @@
       </div>
     </div>
 
+
+ <!-- Modal -->
+    <div class="modal fade" id="project-info-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Project Information</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="tab-content" id="nav-tabContent">
+              <div class="tab-pane fade show active" id="nav-add" role="tabpanel" aria-labelledby="nav-home-tab">
+                <form id="form-add-event">
+                   <input type="hidden" name="_token" value="{{csrf_token()}}">
+                  <div class="container my-2">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-row">
+                          <div class="col-md-6">
+                            <label>eReserve No.</label>
+                            <input type="text" class="form-control" id="ereserve_id" readonly="">
+                          </div>
+                          <div class="col-md-6">
+                            <label>Start of Event Date</label>
+                            <input type="text" class="form-control" id="date_start" name="date_start" readonly>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Event Title</label>
+                            <input type="text" class="form-control" id="event_name" readonly>
+                        </div>        
+                        <div class="form-group">
+                              <label>Academic Year</label>
+                              <input type="text" class="form-control" id="academic_year" name="academic_year" readonly>
+                        </div>
+                        <div class="form-group">
+                              <label>Semester</label>
+                              <input type="text" class="form-control" id="semester" name="semester" readonly>
+                        </div>
+                        <div class="form-group">
+                              <label>Event Classification</label>
+                              <input type="text" class="form-control" id="classification" name="classification" readonly>
+                        </div>
+                        <div class="form-group">
+                              <label>Date Submitted</label>
+                              <input type="text" class="form-control" id="date_submitted" name="date_submitted" readonly>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
 @endsection
 @section('scripts')
 <script>  
@@ -180,11 +236,13 @@
               return status_name;
               // return "<span class="badge badge-primary">Primary</span>";
             } 
-          }
-          @if(auth()->user()->role_id != 1),
+          },
           { data: null,
             render: function ( data, type, row ) { 
               var html = "";
+              @if(auth()->user()->role_id == 1)
+                html += '<button type="button" class="btn btn-success btn-see-report-modal" data-id="'+data.id+'">See Report</button> ';
+              @endif
               @if(auth()->user()->role_id == 2)
               if (data.status == 2) {
                 html += '<button type="button" class="btn btn-success btn-see-report" data-id="'+data.id+'">See Report</button> ';
@@ -204,7 +262,6 @@
               return html;
             } 
           }
-          @endif
           ],
           columnDefs: [
           { className: "hidden", "targets": [0]},
@@ -216,6 +273,33 @@
         var email = $(this).attr('data-email');
         // var win = window.open('students/'+orgid+'/generate-report?mail=true&recipient='+email, '_blank');
         var win = window.open('students/'+orgid+'/generate-report?export=true', '_blank');
+      });
+
+
+      
+
+      $(document).on('click', '.btn-see-report-modal', function() {
+        var id  = $(this).attr('data-id');
+        $('#project-info-modal').modal('show');
+        $.ajax({
+            url: "/events/get-specific-event",
+            type: "POST",
+            data: {
+              id: id,
+              _token: "{{csrf_token()}}"
+            },
+            success: function(data) {
+              $('#ereserve_id').val(data.ereserve_id);
+              $('#event_name').val(data.name);
+              $('#date_start').val(data.date_start);
+              $('#academic_year').val(data.academic_year);
+              $('#semester').val(data.semester);
+              $('#classification').val(data.classification);
+              $('#date_submitted').val(data.updated_at);
+
+            }
+
+          });
       });
 
 

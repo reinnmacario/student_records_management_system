@@ -48,8 +48,16 @@
         margin-top: 50px;
       }
 
+      .card-login-info{
+        margin-top: 50px;
+        margin-bottom: 20px;
+      }
+
+      .tab-info{
+        margin-top: 20px;
+      }
       .footer {
-        position: absolute;
+        /*position: absolute;*/
         bottom: 0;
         width: 100%;
         height: 50px; /* Set the fixed height of the footer here */
@@ -68,6 +76,8 @@
       <img class="login-logo" src="{{asset('img/login-logo.png')}}">
     </div>
     <div class="container">
+      <div class="row">
+        <div class="col-md-4">
         <div class="card card-login">
         <div class="card-body">
           <form id="form-login" method="post" action="/login">
@@ -101,6 +111,55 @@
         </div>
       </div>
     </div>
+    <div class="col-md-7 offset-md-1">
+      <div class="card card-login-info">
+        <div class="card-body">
+          <h4>What is Student Activities Records System?</h4>
+        <nav class="mt-3">
+          <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link active" id="nav-so-tab" data-toggle="tab" href="#nav-so" role="tab" aria-controls="nav-so" aria-selected="true">SO</a>
+            <a class="nav-item nav-link" id="nav-socc-tab" data-toggle="tab" href="#nav-socc" role="tab" aria-controls="nav-socc" aria-selected="false">SOCC</a>
+            <a class="nav-item nav-link" id="nav-osa-tab" data-toggle="tab" href="#nav-osa" role="tab" aria-controls="nav-osa" aria-selected="false">OSA</a>
+          </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+          <div class="tab-pane fade show active" id="nav-so" role="tabpanel" aria-labelledby="nav-so-tab">
+            <div class="tab-info">
+              <h5>SO</h5>
+              <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque et rhoncus enim, faucibus eleifend ex. Nunc felis sapien, pretium non turpis nec, lacinia convallis sem. Ut ac congue orci. Suspendisse pulvinar, felis id vehicula iaculis, massa neque viverra magna, a eleifend sem felis sit amet dolor. Aenean quis nisi posuere, ultricies ligula a, elementum eros. Phasellus a turpis quis ipsum feugiat imperdiet. Nam ullamcorper, nunc sit amet dictum consequat, lacus ligula sagittis elit, a scelerisque quam libero vel lorem. Fusce vel ornare massa. Donec velit nibh, consectetur nec vulputate in, dapibus ut est.</p>
+              <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi eget feugiat orci. Nullam vestibulum bibendum diam, quis mattis odio suscipit maximus. Morbi tempus lacus vestibulum tortor placerat, quis tincidunt dolor varius. Nunc tempor auctor iaculis. Praesent mauris erat, gravida eu magna nec, lobortis posuere orci. Nulla felis tellus, sodales viverra lacinia ac, condimentum sit amet metus. Proin pellentesque nisi nec vulputate elementum. Aliquam erat volutpat. Ut non massa elementum, tincidunt tortor sed, interdum ante. Curabitur in iaculis mi, non pellentesque ligula. Mauris hendrerit elit in auctor fermentum.
+              </p>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="nav-socc" role="tabpanel" aria-labelledby="nav-socc-tab">
+            <div class="tab-info">
+              <h5>SOCC</h5>
+              <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque et rhoncus enim, faucibus eleifend ex. Nunc felis sapien, pretium non turpis nec, lacinia convallis sem. Ut ac congue orci. Suspendisse pulvinar, felis id vehicula iaculis, massa neque viverra magna, a eleifend sem felis sit amet dolor. Aenean quis nisi posuere, ultricies ligula a, elementum eros. Phasellus a turpis quis ipsum feugiat imperdiet. Nam ullamcorper, nunc sit amet dictum consequat, lacus ligula sagittis elit, a scelerisque quam libero vel lorem. Fusce vel ornare massa. Donec velit nibh, consectetur nec vulputate in, dapibus ut est.</p>
+              <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi eget feugiat orci. Nullam vestibulum bibendum diam, quis mattis odio suscipit maximus. Morbi tempus lacus vestibulum tortor placerat, quis tincidunt dolor varius. Nunc tempor auctor iaculis. Praesent mauris erat, gravida eu magna nec, lobortis posuere orci. Nulla felis tellus, sodales viverra lacinia ac, condimentum sit amet metus. Proin pellentesque nisi nec vulputate elementum. Aliquam erat volutpat. Ut non massa elementum, tincidunt tortor sed, interdum ante. Curabitur in iaculis mi, non pellentesque ligula. Mauris hendrerit elit in auctor fermentum.
+              </p>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="nav-osa" role="tabpanel" aria-labelledby="nav-osa-tab">
+            <div class="tab-info">
+              <h5>OSA</h5>
+              <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque et rhoncus enim, faucibus eleifend ex. Nunc felis sapien, pretium non turpis nec, lacinia convallis sem. Ut ac congue orci. Suspendisse pulvinar, felis id vehicula iaculis, massa neque viverra magna, a eleifend sem felis sit amet dolor. Aenean quis nisi posuere, ultricies ligula a, elementum eros. Phasellus a turpis quis ipsum feugiat imperdiet. Nam ullamcorper, nunc sit amet dictum consequat, lacus ligula sagittis elit, a scelerisque quam libero vel lorem. Fusce vel ornare massa. Donec velit nibh, consectetur nec vulputate in, dapibus ut est.</p>
+              <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi eget feugiat orci. Nullam vestibulum bibendum diam, quis mattis odio suscipit maximus. Morbi tempus lacus vestibulum tortor placerat, quis tincidunt dolor varius. Nunc tempor auctor iaculis. Praesent mauris erat, gravida eu magna nec, lobortis posuere orci. Nulla felis tellus, sodales viverra lacinia ac, condimentum sit amet metus. Proin pellentesque nisi nec vulputate elementum. Aliquam erat volutpat. Ut non massa elementum, tincidunt tortor sed, interdum ante. Curabitur in iaculis mi, non pellentesque ligula. Mauris hendrerit elit in auctor fermentum.
+              </p>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+    </div>
 
   <footer class="footer">
       <div class="container text-center">
@@ -113,7 +172,7 @@
 
     <!-- Bootstrap core JavaScript-->
     <script src="{{ asset('js/jquery.min.js') }}"></script>
-    <!-- <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script> -->
+    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
 
     <!-- Core plugin JavaScript-->
     <script src="{{ asset('js/jquery.easing.min.js') }}"></script>
