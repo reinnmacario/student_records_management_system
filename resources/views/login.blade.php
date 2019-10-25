@@ -109,6 +109,11 @@
             <button type="submit" class="btn btn-primary btn-block" name="btn-submit">Login</button>
           </form>
         </div>
+        <div class="card-footer" style="background-color: gray; padding: 20px 20px 40px; ">
+          <div class="card-footer-info">
+            Contact Details
+          </div>
+        </div>
       </div>
     </div>
     <div class="col-md-7 offset-md-1">

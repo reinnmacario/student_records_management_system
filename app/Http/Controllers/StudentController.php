@@ -47,7 +47,7 @@ class StudentController extends Controller
     public function getEventParticipants()
     {
         $event_students = DB::table('event_student')->join('student', 'event_student.student_id', '=', 'student.id')
-        ->join('event', 'event_student.event_id', '=', 'event.id')->get();
+        ->join('event', 'event_student.event_id', '=', 'event.id')->where('event.status', '!=', '6')->get();
 
         return response()->json($event_students);
     }

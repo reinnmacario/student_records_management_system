@@ -123,6 +123,7 @@ Route::post('logout', 'UserController@authenticate');
         Route::post('get-specific-event', 'EventController@getSpecificEvent');
         Route::get('get-all-event-speakers', 'EventController@getAllEventSpeakers');
         Route::post('get-all-speakers', 'EventController@getAllSpeakers');
+        Route::post('/update', 'EventController@update');
 
         Route::delete('speaker/delete', 'EventController@deleteEventSpeaker');
 
@@ -142,6 +143,7 @@ Route::post('logout', 'UserController@authenticate');
         // Route::group(['middleware' => ['event.inspectors']], function() {
             Route::post('approve', 'EventController@approve');
             Route::post('reject', 'EventController@reject');
+            Route::post('archive', 'EventController@archive');
         // });
     });
 

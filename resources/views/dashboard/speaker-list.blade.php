@@ -93,7 +93,7 @@
                           </div>
                         </div>
                         <div class="form-group mt-3">
-                          <label>Event Description</label>
+                          <label>Description</label>
                           <textarea class="form-control" id="description" name="description"></textarea>
                         </div>
                         <div class="form-group text-right mt-4">
@@ -145,6 +145,7 @@
         ],
         columnDefs: [
         { className: "hidden", "targets": [0]},
+        {  targets: [5], orderable: false}
         ]
     });
 

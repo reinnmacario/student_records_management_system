@@ -24,7 +24,8 @@ class EventController extends Controller
 
         if($user->role_id == 1)
         {
-            $events = Event::where('organization_id', auth()->user()->id)->get();
+            $events = Event::where('organization_id', auth()->user()->id)
+            ->where('status', '!=', '6')->get();
             /* $events = $role_user->events()->with('speakers')->with('students')->get(); */
             // $events = $role_user->events()->get();
         }
@@ -63,7 +64,7 @@ class EventController extends Controller
     }
 
     public function getAllEvents(){
-        $events = Event::all();
+        $events = Event::where('status', '!=', '6')->get();
 
         return response()->json($events);
     }
@@ -71,7 +72,7 @@ class EventController extends Controller
 
     public function getAllEventSpeakers(){
         $event_speakers = DB::table('event_speaker')->join('speaker', 'event_speaker.speaker_id', '=', 'speaker.id')
-        ->join('event', 'event_speaker.event_id', '=', 'event.id')->get();
+        ->join('event', 'event_speaker.event_id', '=', 'event.id')->where('event.status', '!=', '6')->get();
 
         return response()->json($event_speakers);
     }
@@ -90,13 +91,12 @@ class EventController extends Controller
                 $events = Event::whereIn('status', [
                     Config::get('constants.event_status.osa_approval'),
                     Config::get('constants.event_status.cleared'),
-                    Config::get('constants.event_status.archived'),
                     Config::get('constants.event_status.osa_rejection')
                 ])->with('organization','organization.user')->get();
             }
             else if(auth()->user()->role_id == 1)
             {
-                $events = Event::where('organization_id', auth()->user()->id)->get();
+                $events = Event::where('organization_id', auth()->user()->id)->where('status', '!=', '6')->get();
             }
             else if(auth()->user()->role_id == 2) {
                 $events = Event::whereIn('status', [
@@ -211,14 +211,16 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateEvent $request, $id)
+    public function update(Request $request)
     {
+
         $user = static::getCurrentUser();
-        $event = Event::find($id);
+        $event = Event::find($request->id);
 
         if(!in_array($event->status, [Config::get('constants.event_status.draft'), Config::get('constants.event_status.socc_rejection')]))
         {
             return response()->json([
+                'success' => false,
                 'error' => 'The status of the event no longer allows updates'
             ]);
         }
@@ -230,12 +232,14 @@ class EventController extends Controller
         {
             // Prevent them from updating the status to an unallowed status code (e.g. setting it to cleared)
             return response()->json([
+                'success' => false,
                 'error' => 'Invalid status code'
             ]);
         }
-        elseif(Event::where('ereserve_id', $request->input('ereserve_id'))->first() != $event)
+        elseif($event->ereserve_id == $request->ereserve_id)
         {
             return response()->json([
+                'success' => false,
                 'error' => 'That E-Reserve ID has already been taken'
             ]);
         }
@@ -246,12 +250,14 @@ class EventController extends Controller
             $event->date_start = $request->input('date_start');
             $event->status = $request->input('status');
             $event->classification = $request->input('classification');
+            $event->semester = $request->input('semester');
             $event->ereserve_id = $request->input('ereserve_id');
-            $event->read_status = $request->input('read_status');
+            $event->read_status = 0;
             $event->organization_id = $user->id;
             $event->save();
 
             return response()->json([
+                'success' => true,
                 'event' => $event
             ]);
         }
@@ -424,6 +430,20 @@ class EventController extends Controller
             ]);
         }
     }
+
+    public function archive(Request $request)
+    {
+        $id = $request->id;
+        $user = static::getCurrentUser();
+        $event = Event::find($id);
+        $event->status = Config::get('constants.event_status.archived');
+        $event->save();
+        return response()->json([
+            'success' => true,
+            'event' => $event
+        ]);
+    }
+
 
     public function archived()
     {

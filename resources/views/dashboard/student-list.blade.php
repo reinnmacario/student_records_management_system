@@ -38,9 +38,9 @@
                       <th class="hidden">ID</th>
                       <th>Student ID</th>
                       <th>Student Name</th>
-                      <th>Date Created</th>
                       <th>College</th>
                       <th>Course</th>
+                      <th>Date Created</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -49,9 +49,9 @@
                       <th class="hidden">ID</th>
                       <th>Student ID</th>
                       <th>Student Name</th>
-                      <th>Date Created</th>
                       <th>College</th>
                       <th>Course</th>
+                      <th>Date Created</th>
                       <th>Actions</th>
                     </tr>
                   </tfoot>
@@ -245,6 +245,7 @@
         ],
         columnDefs: [
         { className: "hidden", "targets": [0]},
+        {  targets: [6], orderable: false}
         ]
     });
 

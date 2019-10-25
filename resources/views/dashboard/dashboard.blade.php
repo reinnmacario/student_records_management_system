@@ -5,9 +5,30 @@
 
 @section('styles')
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.18/b-1.5.2/b-colvis-1.5.2/b-flash-1.5.2/b-html5-1.5.2/b-print-1.5.2/r-2.2.2/datatables.min.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.18/b-1.5.2/b-colvis-1.5.2/b-flash-1.5.2/b-html5-1.5.2/b-print-1.5.2/r-2.2.2/datatables.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<style>
+
+
+.select1-container, .select2-container, #select-student, #select-speaker {
+  width: 100%!important;
+  }
+
+.select1-container .select1-selection--single, .select2-container .select2-selection--single{
+    height:34px !important;
+
+}
+.select1-container--default .select1-selection--single, .select2-container--default .select2-selection--single{
+     border: 1px solid #ccc !important; 
+     border-radius: 0px !important; 
+}
+
+</style>
 @endsection
 @section('content')
 
@@ -267,7 +288,7 @@
                       <div class="col-md-12">
                         <div class="form-group">
                             <label>Event</label>
-                            <select type="select" id="select-event" class="form-control select-event" data-type="1" name="event" required>
+                            <select type="select" class="form-control select-event select-event1" data-type="1" name="event" required>
                               <option value="" selected disabled>Select Event</option>
                             </select>
                         </div>
@@ -320,7 +341,7 @@
                       <div class="col-md-12">
                             <div class="form-group">
                               <label>Event</label>
-                              <select type="select" id="select-event" class="form-control select-event" data-type="2" name="event" required>
+                              <select type="select" class="form-control select-event select-event2" data-type="2" name="event" required>
                                 <option value="" selected disabled>Select Event</option>
                               </select>
                             </div>
@@ -352,7 +373,13 @@
 <script>  
   var projects;
   var token = "{{csrf_token()}}";
+   
   $(document).ready(function() {
+  $('.select-event1').select2();
+  $('.select-event2').select2();
+  $('#select-student').select2();
+  $('#select-speaker').select2();
+
      $('#dashboard').addClass('active');
     projects = $("#table-projects").DataTable({
         ajax: {
@@ -479,10 +506,36 @@
           });
   }
 
+  function getAllSpeakers() {
+     $.ajax({
+            url: "events/get-all-speakers",
+            type: "POST",
+            data:{
+              _token: "{{csrf_token()}}",
+            },
+            success: function(data) {
+              var html = '<option value="" selected disabled>Select Speaker</option>';
+              $.each(data, function(x,y) {
+                  html += '<option value="'+y.id+'">'+y.first_name+" "+y.last_name+'</option>';
+              });
+
+              $('.select-speaker').html(html);
+
+              // if(type==1) {
+              //   $('.select-student').html(html);
+              // } 
+              // else if(type==2) {
+              //   $('.select-speaker').html(html);
+              // }
+            }
+      });
+  }
+
   var participants, projects;
   var token = "{{csrf_token()}}";
     getAllEvents();
     getAllStudents();
+    getAllSpeakers();
     participants = $("#table-participants").DataTable({
         ajax: {
           url: "students/get-event-participants",
@@ -514,6 +567,7 @@
         ],
         columnDefs: [
         { className: "hidden", "targets": [0]},
+        {  targets: [5], orderable: false}
         ]
     });
 
@@ -573,7 +627,7 @@
 
         },
         responsive:true,
-        "order": [[ 4, "desc" ]],
+        "order": [[ 3, "desc" ]],
         columns: [
         { data: 'event_id'},
         { data: 'name' },
@@ -595,6 +649,7 @@
         ],
         columnDefs: [
         { className: "hidden", "targets": [0]},
+        {  targets: [4], orderable: false}
         ]
     });
 
@@ -602,29 +657,10 @@
       $('#add-speaker-modal').modal('show');
     });
 
-    $(document).on('change', '.select-event', function() {
-      var type = $(this).attr('data-type');
-        $.ajax({
-            url: "events/get-all-speakers",
-            type: "POST",
-            data:{
-              _token: "{{csrf_token()}}",
-              id: $(this).val()
-            },
-            success: function(data) {
-              var html = '<option value="" selected disabled>Select Speaker</option>';
-              $.each(data, function(x,y) {
-                  html += '<option value="'+y.id+'">'+y.first_name+" "+y.last_name+'</option>';
-              });
-              if(type==1) {
-                $('.select-student').html(html);
-              } 
-              else if(type==2) {
-                $('.select-speaker').html(html);
-              }
-            }
-      });
-    });
+    // $(document).on('change', '.select-event', function() {
+    //   var type = $(this).attr('data-type');
+       
+    // });
 
     $(document).on('submit', '#form-add-event-speaker', function() {
        $.ajax({
