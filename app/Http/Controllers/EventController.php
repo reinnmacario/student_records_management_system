@@ -64,7 +64,7 @@ class EventController extends Controller
     }
 
     public function getAllEvents(){
-        $events = Event::where('status', '!=', '6')->get();
+        $events = Event::where('status', '!=', '6')->where('organization_id', auth()->user()->id)->get();
 
         return response()->json($events);
     }
@@ -72,7 +72,8 @@ class EventController extends Controller
 
     public function getAllEventSpeakers(){
         $event_speakers = DB::table('event_speaker')->join('speaker', 'event_speaker.speaker_id', '=', 'speaker.id')
-        ->join('event', 'event_speaker.event_id', '=', 'event.id')->where('event.status', '!=', '6')->get();
+        ->join('event', 'event_speaker.event_id', '=', 'event.id')->where('event.status', '!=', '6')
+        ->where('event.organization_id',  auth()->user()->id)->get();
 
         return response()->json($event_speakers);
     }
