@@ -101,8 +101,22 @@ class StudentController extends Controller
 
     public function updateStudentInfo(Request $request)
     {
-        $student = Student::where('student_id', $request->student_id)->first();
-        if($student)
+        // $student = Student::where('student_id', $request->student_id)->first();
+        $student = Student::find($request->id);
+         if($student->student_id == $request->student_id){
+            $check_id = false;
+        } 
+        else{
+            $check_student = Student::where('student_id', $request->student_id)->first();
+            if (!empty($check_student)) {
+                $check_id = true;
+            }
+            else {
+                $chek_id = false;
+            }
+        }
+
+        if($check_id === true)
         {
             return response()->json([
                 'success' => false,

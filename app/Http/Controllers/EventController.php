@@ -218,6 +218,19 @@ class EventController extends Controller
         $user = static::getCurrentUser();
         $event = Event::find($request->id);
 
+        if($event->ereserve_id == $request->ereserve_id){
+            $check_id = false;
+        } 
+        else{
+            $check_event = Event::where('ereserve_id', $request->ereserve_id)->get();
+            if (!empty($check_event)) {
+                $check_id = true;
+            }
+            else {
+                $chek_id = false;
+            }
+        }
+
         if(!in_array($event->status, [Config::get('constants.event_status.draft'), Config::get('constants.event_status.socc_rejection')]))
         {
             return response()->json([
@@ -237,7 +250,7 @@ class EventController extends Controller
                 'error' => 'Invalid status code'
             ]);
         }
-        elseif($event->ereserve_id == $request->ereserve_id)
+        elseif($check_id === true)
         {
             return response()->json([
                 'success' => false,

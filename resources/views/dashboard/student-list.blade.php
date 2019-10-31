@@ -268,9 +268,9 @@
             },
             success: function(data) {
               $('#edit_student_id').val(data.student_id);
-              $('#edit_first_name').val(data.student_id);
-              $('#edit_mi').val(data.student_id);
-              $('#edit_last_name').val(data.student_id);
+              $('#edit_first_name').val(data.first_name);
+              $('#edit_mi').val(data.middle_initial);
+              $('#edit_last_name').val(data.last_name);
               $('.edit_college').val(data.college);
               $('.edit_course').html("<option value='"+data.course+"'>"+data.course+"</option>");
             }
