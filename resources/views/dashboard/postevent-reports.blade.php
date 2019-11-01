@@ -277,6 +277,7 @@
 <script>  
 
   var reports;
+  var current_event_id = null;
   $(document).ready(function() {
      $('#post-event-reports').addClass('active');
       reports = $("#table-reports").DataTable({
@@ -446,7 +447,16 @@
 
 
       $(document).on('click', '.btn-view-checklist', function() {
-        var id  = $(this).attr('data-id');
+        var id  = $(this).attr('data-id')
+        if (current_event_id == null) {
+          current_event_id = id;
+        }
+
+        if (current_event_id != id) {
+          $('.eval-check').prop('checked', false);
+          $('#notes').val('');
+          current_event_id = id;
+        }
         $('#project-info-modal').modal('hide');
         $('#eval-report-modal').modal('show');
         $('.btn-socc-endorse').attr('data-id', id);
