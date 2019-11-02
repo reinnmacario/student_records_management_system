@@ -288,13 +288,13 @@
                       <div class="col-md-12">
                         <div class="form-group">
                             <label>Event</label>
-                            <select type="select" class="form-control select-event select-event1" data-type="1" name="event" required>
+                            <select type="select" class="form-control select2 select-event" data-type="1" name="event" required>
                               <option value="" selected disabled>Select Event</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label>Student</label>
-                            <select type="select" id="select-student" class="form-control select-student" name="student" required>
+                            <select type="select" id="select-student" class="form-control select2 select-student" name="student" required>
                               <option value="" selected disabled>Select Student</option>
                             </select>
                         </div>
@@ -341,14 +341,14 @@
                       <div class="col-md-12">
                             <div class="form-group">
                               <label>Event</label>
-                              <select type="select" class="form-control select-event select-event2" data-type="2" name="event" required>
+                              <select type="select" class="form-control select2 select-event" data-type="2" name="event" required>
                                 <option value="" selected disabled>Select Event</option>
                               </select>
                             </div>
                             <input type="hidden" id="token" name="_token" value="{{csrf_token()}}">
                             <div class="form-group">
                               <label>Speaker</label>
-                              <select type="select" id="select-speaker" class="form-control select-speaker" name="speaker" required>
+                              <select type="select" id="select-speaker" class="form-control select2 select-speaker" name="speaker" required>
                                 <option value="" selected disabled>Select Speaker</option>
                               </select>
                           </div>
@@ -375,10 +375,11 @@
   var token = "{{csrf_token()}}";
    
   $(document).ready(function() {
-  $('.select-event1').select2();
-  $('.select-event2').select2();
-  $('#select-student').select2();
-  $('#select-speaker').select2();
+     $('.select2').each(function () {
+            $(this).select2({
+              dropdownParent: $(this).parent()
+          });
+      });
 
      $('#dashboard').addClass('active');
     projects = $("#table-projects").DataTable({
