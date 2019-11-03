@@ -221,9 +221,16 @@
             </button>
           </div>
           <div class="modal-body">
-            <div class="tab-content" id="nav-tabContent">
-              <div class="tab-pane fade show active" id="nav-add" role="tabpanel" aria-labelledby="nav-home-tab">
-                <form id="form-add-event">
+          <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+              <a class="nav-item nav-link active" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
+              <a class="nav-item nav-link" id="nav-stud-participants-tab" data-toggle="tab" href="#nav-stud-participants" role="tab" aria-controls="nav-stud-participants" aria-selected="false">Student Participants</a>
+              <a class="nav-item nav-link" id="nav-speakers-tab" data-toggle="tab" href="#nav-speakers" role="tab" aria-controls="nav-speakers" aria-selected="false">Speakers</a>
+            </div>
+          </nav>
+          <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab">
+              <form id="form-add-event">
                    <input type="hidden" name="_token" value="{{csrf_token()}}">
                   <div class="container my-2">
                     <div class="row">
@@ -265,8 +272,48 @@
                     </div>
                   </div>
                 </form>
+            </div>
+            <div class="tab-pane fade" id="nav-stud-participants" role="tabpanel" aria-labelledby="nav-stud-participants-tab">
+              <div class="table-responsive mt-3">
+                <table class="table table-bordered dt-responsive" id="table-stud-participants" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>Student ID</th>
+                      <th>Student Name</th>
+                      <th>Involvement</th>
+                    </tr>
+                  </thead>
+                  <tfoot>
+                    <tr>
+                      <th>Student ID</th>
+                      <th>Student Name</th>
+                      <th>Involvement</th>
+                    </tr>
+                  </tfoot>
+                  <tbody>
+                  </tbody>
+                </table>
               </div>
             </div>
+            <div class="tab-pane fade" id="nav-speakers" role="tabpanel" aria-labelledby="nav-speakers-tab">
+              <div class="table-responsive mt-3">
+                <table class="table table-bordered dt-responsive" id="table-speakers" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>Speaker</th>
+                    </tr>
+                  </thead>
+                  <tfoot>
+                    <tr>
+                      <th>Speaker</th>
+                    </tr>
+                  </tfoot>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
           </div>
         </div>
       </div>
@@ -277,6 +324,7 @@
 <script>  
 
   var reports;
+  var stud_participants, speakers;
   var current_event_id = null;
   $(document).ready(function() {
      $('#post-event-reports').addClass('active');
@@ -363,10 +411,64 @@
       });
 
 
-
+      $('#project-info-modal').on('hidden.bs.modal', function () {
+        stud_participants.destroy();
+        speakers.destroy();
+      });
+  
+  
       $(document).on('click', '.btn-see-report', function() {
         var id  = $(this).attr('data-id');
         $('#project-info-modal').modal('show');
+
+
+        stud_participants = $("#table-stud-participants").DataTable({
+          ajax: {
+            url: "/events/get-post-event-students",
+            type: "POST",
+            dataSrc: "", 
+            data: {
+              id: id,
+              _token: "{{csrf_token()}}"
+            }
+
+          },
+          responsive:true,
+          "order": [[0, "desc" ]],
+          columns: [
+          { data: 'student_id' },
+          { data: null,
+            render: function ( data, type, row ) { 
+            return data.first_name+" "+data.middle_initial+" "+data.last_name;
+            } 
+          },
+          { data: 'involvement'},
+         
+          ]
+      });
+
+       speakers = $("#table-speakers").DataTable({
+          ajax: {
+            url: "/events/get-post-event-speakers",
+            type: "POST",
+            dataSrc: "", 
+            data: {
+              id: id,
+              _token: "{{csrf_token()}}"
+            }
+
+          },
+          responsive:true,
+          "order": [[0, "desc" ]],
+          columns: [
+          { data: null,
+            render: function ( data, type, row ) { 
+            return data.first_name+" "+data.last_name;
+            } 
+          }
+          ]
+      });
+
 
         @if(auth()->user()->role_id != 1)
         var status = $(this).attr('data-status');

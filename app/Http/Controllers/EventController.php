@@ -63,9 +63,20 @@ class EventController extends Controller
         return response()->json($event);
     }
 
+    public function getSpecificEventStudents(Request $request) {
+        $event_students = DB::table('event_student')->join('student', 'event_student.student_id', '=', 'student.id')
+        ->where('event_student.event_id',  $request->id)->get();
+        return response()->json($event_students);
+    }
+
+    public function getSpecificEventSpeakers(Request $request) {
+        $event_speakers = DB::table('event_speaker')->join('speaker', 'event_speaker.speaker_id', '=', 'speaker.id')
+        ->where('event_speaker.event_id', $request->id)->get();
+        return response()->json($event_speakers);
+    }
+
     public function getAllEvents(){
         $events = Event::where('status', '!=', '6')->where('organization_id', auth()->user()->id)->get();
-
         return response()->json($events);
     }
 

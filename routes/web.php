@@ -123,6 +123,10 @@ Route::post('logout', 'UserController@authenticate');
         Route::post('get-specific-event', 'EventController@getSpecificEvent');
         Route::get('get-all-event-speakers', 'EventController@getAllEventSpeakers');
         Route::post('get-all-speakers', 'EventController@getAllSpeakers');
+
+        Route::post('get-post-event-students', 'EventController@getSpecificEventStudents');
+        Route::post('get-post-event-speakers', 'EventController@getSpecificEventSpeakers');
+
         Route::post('/update', 'EventController@update');
 
         Route::delete('speaker/delete', 'EventController@deleteEventSpeaker');
