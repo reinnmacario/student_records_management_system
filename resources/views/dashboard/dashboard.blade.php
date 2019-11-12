@@ -547,7 +547,7 @@
         responsive:true,
         "order": [[ 4, "desc" ]],
         columns: [
-        { data: 'id'},
+        { data: 'event_id'},
         { data: 'name' },
         { data: null,
             render: function ( data, type, row ) { 
@@ -556,12 +556,12 @@
          },
         // { data: 'semester'},
         { data: 'involvement'},
-        { data: 'created_at'},
+        { data: 'updated_at'},
         { data: null,
           render: function ( data, type, row ) { 
             var html = "";
             //html += '<button type="button" class="btn btn-primary">Edit</button> ';
-            html += '<button type="button" class="btn btn-danger btn-delete">Remove</button>';
+            html += '<button type="button" class="btn btn-danger btn-delete-participant" data-event="'+data.event_id+'" data-student="'+data.student_id+'">Remove</button>';
             return html;
           } 
         }
@@ -595,20 +595,22 @@
             return false;
     });
 
-    $(document).on('click', '.btn-delete', function() {
+    $(document).on('click', '.btn-delete-participant', function() {
       var confirm_alert = confirm("Are you sure you want to delete this participant?");
       if (confirm_alert == true) {
-       var id  = $(this).attr('data-id');
+       var event_id  = $(this).attr('data-event');
+       var student_id = $(this).attr('data-student');
        $.ajax({
-            url: "participant/delete",
+            url: "events/participant/delete",
             type: "DELETE",
             data: {
-              id: id,
+              event_id: event_id,
+              student_id: student_id,
               _token: "{{csrf_token()}}"
             },
             success: function(data) {
               if (data.success === true) {
-                alert("Participants Successfully Deleted!");
+                alert("Participant Successfully Deleted!");
                 location.reload();
               }
             }

@@ -129,6 +129,7 @@ Route::post('logout', 'UserController@authenticate');
 
         Route::post('/update', 'EventController@update');
 
+        Route::delete('participant/delete', 'EventController@deleteEventParticipant');
         Route::delete('speaker/delete', 'EventController@deleteEventSpeaker');
 
         Route::get('show/{$id}', 'EventController@show');
