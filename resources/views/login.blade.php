@@ -73,7 +73,7 @@
   </head>
   <body class="login-wrapper">
     <div class="container-fluid bg-white login-topnav">
-      <img class="login-logo" src="{{asset('img/login-logo.png')}}">
+     <h5 class="py-3">Student Records Management System</h5> 
     </div>
     <div class="container">
       <div class="row">
